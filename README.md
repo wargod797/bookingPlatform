@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# bookingPlatform
-=======
 # Booking Platform Spring Boot Application
 
 ## Overview
@@ -14,4 +11,3 @@ This is a Spring Boot application with PostgreSQL (port 5432) and caching (Ehcac
 ## Build and Run (Maven)
 1. Set environment vars if needed (defaults: DB_USER=postgres, DB_PASS=postgres).
 2. Build the JAR:
->>>>>>> d274526 (Complete Solution)
