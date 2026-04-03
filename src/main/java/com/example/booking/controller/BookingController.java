@@ -1,0 +1,28 @@
+package com.example.booking.controller;
+
+import com.example.booking.model.Booking;
+import com.example.booking.service.BookingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/bookings")
+public class BookingController {
+
+    @Autowired
+    private BookingService bookingService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Booking> getBooking(@PathVariable Long id) {
+        Optional<Booking> booking = bookingService.getBookingById(id);
+        return booking.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public Booking addBooking(@RequestBody Booking booking) {
+        return bookingService.saveBooking(booking);
+    }
+}

@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/booking_db
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  cache:
+   type: jcache
+   jcache:
+     config: classpath:ehcache.xml
+  # OR
+  # type: redis
+  # redis:
+  #   ttl: 600 # seconds
+#  redis:
+#    host: localhost
+#    port: 6379
