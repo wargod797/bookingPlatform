@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: booking_db
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:8
+    ports:
+      - "6379:6379"
+  app:
+    build: .
+    environment:
+      DB_USER: postgres
+      DB_PASS: postgres
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8080:8080"
