@@ -26,8 +26,6 @@ public class MovieController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovie(@PathVariable Long id) {
-
-        System.out.println("HeLLO rUNNING");
         Optional<Movie> movie = movieService.getMovieById(id);
         return movie.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,11 +36,6 @@ public class MovieController {
     @PostMapping
     public Movie addMovie(
             @RequestBody Movie movie) {
-
-        System.out.println(movie);
-
-        System.out.println("Hello");
-
         return movieService.saveMovie(movie);
     }
 }
