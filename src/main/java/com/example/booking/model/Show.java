@@ -3,6 +3,7 @@ package com.example.booking.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -13,7 +14,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Show {
+public class Show implements Serializable  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

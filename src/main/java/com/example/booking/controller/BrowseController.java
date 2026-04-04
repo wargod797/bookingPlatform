@@ -3,6 +3,7 @@ package com.example.booking.controller;
 import com.example.booking.model.Show;
 import com.example.booking.service.BrowseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class BrowseController {
     @Autowired
     private BrowseService browseService;
 
+    @Cacheable
     @GetMapping("/shows")
     public List<Show> getShows(
             @RequestParam Long movieId,

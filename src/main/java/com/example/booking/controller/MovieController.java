@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
@@ -24,6 +25,8 @@ public class MovieController {
             @ApiResponse(responseCode = "200", description = "Movie found"),
             @ApiResponse(responseCode = "404", description = "Movie not found")
     })
+
+    @Cacheable
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovie(@PathVariable Long id) {
         Optional<Movie> movie = movieService.getMovieById(id);

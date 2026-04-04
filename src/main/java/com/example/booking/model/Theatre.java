@@ -3,6 +3,8 @@ package com.example.booking.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "theatre")
 @Getter
@@ -10,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Theatre {
+public class Theatre implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
