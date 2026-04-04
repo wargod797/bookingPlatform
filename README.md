@@ -480,36 +480,4 @@ curl -s http://localhost:8080/v3/api-docs | jq .
 
 ---
 
-## Known Notes
-
-1. **No authentication** — all `/partners/**` endpoints are publicly accessible. Add Spring Security before any production deployment.
-2. **No seat-level concurrency control** — two simultaneous requests for the same seat can both pass the availability check before either commits. Add `@Lock(LockModeType.PESSIMISTIC_WRITE)` to the seat query to prevent this.
-3. **Entities returned from controllers** — JPA entities are serialized directly. Introduce response DTOs to decouple the API contract from the persistence model.
-4. **Redis provisioned but inactive** — Redis is in `docker-compose.yml` and partially wired in `CacheConfig.java`, but Ehcache is the active cache backend for this version.
-5. **`Optional<Movie>` is cached** — an empty `Optional` (movie not found) is also cached, so a missing movie will not be re-fetched until the TTL expires.
-
----
-
-## Suggested Next Steps
-
-**Short-term**
-- Add `@Lock(LockModeType.PESSIMISTIC_WRITE)` on seat fetch inside `BookingService` to eliminate the concurrency gap
-- Add `@NotNull` / `@NotBlank` Bean Validation on all request DTOs and enable `@Valid` in controllers
-- Introduce response record types for all controllers to decouple the API from JPA entities
-- Add integration tests with `@SpringBootTest` + Testcontainers for PostgreSQL
-
-**Medium-term**
-- Secure `/partners/**` with Spring Security (API key or JWT)
-- Add pagination to `GET /movies` and `GET /browse/shows`
-- Add `@CacheEvict` when a movie is updated or deleted
-- Add a `GET /partners/shows/{showId}` management endpoint
-
-**Long-term**
-- Seat hold / expiry workflow (reserve for N minutes before confirming)
-- Activate Redis when the platform scales to multiple instances
-- Expose Prometheus metrics via Spring Boot Actuator
-- Add a dedicated admin API separate from the partner-facing surface
-
----
-
 > For the full detailed design including all sequence diagrams, pricing flowcharts, and complete cURL documentation, see [`design.md`](design.md).
