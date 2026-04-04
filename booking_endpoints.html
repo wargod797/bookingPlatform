@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Platform Endpoints</title>
+  <style>
+    :root {
+      --ink: #1d2939;
+      --muted: #475467;
+      --line: #d0d5dd;
+      --soft: #f8fafc;
+      --accent: #0f766e;
+      --accent-soft: #ecfdf3;
+      --warn: #854d0e;
+      --warn-soft: #fffbeb;
+    }
+
+    @page {
+      size: A4;
+      margin: 0.55in;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      margin: 0;
+      line-height: 1.45;
+      font-size: 11px;
+      background: #fff;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 10px;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #101828;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #101828;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+      margin-top: 22px;
+    }
+
+    h3 {
+      font-size: 13px;
+      margin-top: 16px;
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero {
+      padding: 18px 20px;
+      background: linear-gradient(135deg, #f0fdf9, #f8fafc);
+      border: 1px solid #ccfbf1;
+      border-radius: 12px;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      margin-bottom: 6px;
+    }
+
+    .tag-row {
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #a7f3d0;
+      background: var(--accent-soft);
+      color: #065f46;
+      font-size: 10px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft);
+      color: #344054;
+      font-size: 10.5px;
+    }
+
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 10px;
+      color: #111827;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 12px;
+      border-radius: 10px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 8px 0 12px;
+      page-break-inside: avoid;
+    }
+
+    .note, .warning {
+      border-radius: 10px;
+      padding: 11px 12px;
+      margin: 10px 0 14px;
+      page-break-inside: avoid;
+    }
+
+    .note {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+    }
+
+    .warning {
+      background: var(--warn-soft);
+      border: 1px solid #fde68a;
+      color: var(--warn);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 12px 0 16px;
+      page-break-inside: avoid;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+      min-height: 88px;
+    }
+
+    .step .num {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #0f766e;
+      color: #fff;
+      text-align: center;
+      line-height: 20px;
+      font-size: 10px;
+      margin-bottom: 8px;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #101828;
+    }
+
+    ul {
+      margin: 8px 0 12px 18px;
+      padding: 0;
+      color: var(--muted);
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    .small {
+      font-size: 10px;
+      color: #667085;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>Booking Platform Endpoint Guide</h1>
+      <p>Updated for the current Spring Boot implementation in the workspace.</p>
+      <p>This document lists the live REST endpoints, request payloads, and curl flows required to set up and test the booking scenarios implemented in code.</p>
+      <div class="tag-row">
+        <span class="tag">Spring Boot REST API</span>
+        <span class="tag">Partner setup + booking flow</span>
+        <span class="tag">PowerShell curl examples</span>
+        <span class="tag">Scenario pricing coverage</span>
+      </div>
+    </section>
+
+    <h2>Endpoint Summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Area</th>
+          <th>Method</th>
+          <th>Path</th>
+          <th>Purpose</th>
+          <th>Expected Success</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Partner</td>
+          <td><code>POST</code></td>
+          <td><code>/partners/theatres</code></td>
+          <td>Onboard a theatre for a city.</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td>Catalog</td>
+          <td><code>POST</code></td>
+          <td><code>/movies</code></td>
+          <td>Create a movie.</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td>Catalog</td>
+          <td><code>GET</code></td>
+          <td><code>/movies</code></td>
+          <td>List movies with optional <code>genre</code> and <code>language</code> filters.</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td>Catalog</td>
+          <td><code>GET</code></td>
+          <td><code>/movies/{id}</code></td>
+          <td>Fetch movie details by ID.</td>
+          <td><code>200 OK</code> or <code>404</code></td>
+        </tr>
+        <tr>
+          <td>Partner</td>
+          <td><code>POST</code></td>
+          <td><code>/partners/shows</code></td>
+          <td>Create a show for a movie and theatre.</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td>Partner</td>
+          <td><code>POST</code></td>
+          <td><code>/partners/shows/{showId}/seats</code></td>
+          <td>Allocate seat inventory for a show.</td>
+          <td><code>201 Created</code></td>
+        </tr>
+        <tr>
+          <td>Browse</td>
+          <td><code>GET</code></td>
+          <td><code>/browse/shows</code></td>
+          <td>Browse shows by <code>movieId</code>, <code>city</code>, and <code>date</code>.</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td>Booking</td>
+          <td><code>POST</code></td>
+          <td><code>/bookings</code></td>
+          <td>Book seats for a selected show.</td>
+          <td><code>200 OK</code></td>
+        </tr>
+        <tr>
+          <td>Booking</td>
+          <td><code>GET</code></td>
+          <td><code>/bookings/{id}</code></td>
+          <td>Fetch a booking by ID.</td>
+          <td><code>200 OK</code> or <code>404</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Booking Flow</h2>
+    <div class="flow">
+      <div class="step">
+        <div class="num">1</div>
+        <strong>Onboard Theatre</strong>
+        Create the city + theatre partner entry used by shows.
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <strong>Create Movie</strong>
+        Add a movie title with genre and language.
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <strong>Create Show</strong>
+        Link movie, theatre, date, time, and price.
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <strong>Allocate Seats</strong>
+        Register seat inventory for the show before booking.
+      </div>
+      <div class="step">
+        <div class="num">5</div>
+        <strong>Browse + Book</strong>
+        Discover the show, book seats, then fetch the booking.
+      </div>
+    </div>
+
+    <div class="warning">
+      <strong>Important:</strong> <code>/browse/shows</code> returns an empty array until the movie, theatre, show, and seat inventory are created. The booking write path also requires the requested seats to exist for that show.
+    </div>
+
+    <h2>Request Payloads</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Endpoint</th>
+          <th>Sample JSON</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>POST /partners/theatres</code></td>
+          <td><code>{"theatreName":"PVR Andheri","cityName":"Mumbai"}</code></td>
+        </tr>
+        <tr>
+          <td><code>POST /movies</code></td>
+          <td><code>{"title":"Interstellar","genre":"Sci-Fi","language":"English"}</code></td>
+        </tr>
+        <tr>
+          <td><code>POST /partners/shows</code></td>
+          <td><code>{"movieId":1,"theatreId":1,"showDate":"2026-04-04","showTime":"13:00","price":100.0}</code></td>
+        </tr>
+        <tr>
+          <td><code>POST /partners/shows/{showId}/seats</code></td>
+          <td><code>{"seatNumbers":["A1","A2","A3","A4","A5"]}</code></td>
+        </tr>
+        <tr>
+          <td><code>POST /bookings</code></td>
+          <td><code>{"showId":1,"seats":["A1","A2","A3"]}</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <h2>Scenario A: Offer Location + Afternoon Show</h2>
+    <p>This scenario matches the selected city and theatre configuration and uses an afternoon show. Both discounts apply.</p>
+    <ul>
+      <li>City: <code>Mumbai</code></li>
+      <li>Theatre: <code>PVR Andheri</code></li>
+      <li>Show time: <code>13:00</code></li>
+      <li>Seat count: <code>3</code></li>
+      <li>Ticket price: <code>100.0</code></li>
+      <li>Expected total: <code>200.0</code></li>
+    </ul>
+    <pre>curl.exe -X POST "http://localhost:8080/partners/theatres" `
+  -H "Content-Type: application/json" `
+  -d '{"theatreName":"PVR Andheri","cityName":"Mumbai"}'
+
+curl.exe -X POST "http://localhost:8080/movies" `
+  -H "Content-Type: application/json" `
+  -d '{"title":"Interstellar","genre":"Sci-Fi","language":"English"}'
+
+curl.exe -X POST "http://localhost:8080/partners/shows" `
+  -H "Content-Type: application/json" `
+  -d '{"movieId":1,"theatreId":1,"showDate":"2026-04-04","showTime":"13:00","price":100.0}'
+
+curl.exe -X POST "http://localhost:8080/partners/shows/1/seats" `
+  -H "Content-Type: application/json" `
+  -d '{"seatNumbers":["A1","A2","A3","A4","A5"]}'
+
+curl.exe "http://localhost:8080/browse/shows?movieId=1&city=Mumbai&date=2026-04-04"
+
+curl.exe -X POST "http://localhost:8080/bookings" `
+  -H "Content-Type: application/json" `
+  -d '{"showId":1,"seats":["A1","A2","A3"]}'
+
+curl.exe "http://localhost:8080/bookings/1"</pre>
+
+    <div class="note">
+      Pricing calculation: <code>(3 x 100 - 50) x 0.8 = 200.0</code>. The third-ticket half-price offer applies first, then the afternoon 20% discount applies to the subtotal.
+    </div>
+
+    <h2>Scenario B: Non-Offer Location + Afternoon Show</h2>
+    <p>This scenario uses an afternoon show outside the configured third-ticket offer location, so only the afternoon discount applies.</p>
+    <ul>
+      <li>City: <code>Delhi</code></li>
+      <li>Theatre: <code>Downtown Screens</code></li>
+      <li>Show time: <code>13:00</code></li>
+      <li>Seat count: <code>3</code></li>
+      <li>Ticket price: <code>100.0</code></li>
+      <li>Expected total: <code>240.0</code></li>
+    </ul>
+    <pre>curl.exe -X POST "http://localhost:8080/partners/theatres" `
+  -H "Content-Type: application/json" `
+  -d '{"theatreName":"Downtown Screens","cityName":"Delhi"}'
+
+curl.exe -X POST "http://localhost:8080/partners/shows" `
+  -H "Content-Type: application/json" `
+  -d '{"movieId":1,"theatreId":2,"showDate":"2026-04-04","showTime":"13:00","price":100.0}'
+
+curl.exe -X POST "http://localhost:8080/partners/shows/2/seats" `
+  -H "Content-Type: application/json" `
+  -d '{"seatNumbers":["B1","B2","B3","B4"]}'
+
+curl.exe "http://localhost:8080/browse/shows?movieId=1&city=Delhi&date=2026-04-04"
+
+curl.exe -X POST "http://localhost:8080/bookings" `
+  -H "Content-Type: application/json" `
+  -d '{"showId":2,"seats":["B1","B2","B3"]}'
+
+curl.exe "http://localhost:8080/bookings/2"</pre>
+
+    <div class="note">
+      Pricing calculation: <code>3 x 100 x 0.8 = 240.0</code>. Only the afternoon discount applies because the theatre and city are outside the configured offer list.
+    </div>
+
+    <h2>Validation Notes</h2>
+    <ul>
+      <li>Booking fails if any seat number is missing, duplicated, blank, or already booked.</li>
+      <li>The booking response includes <code>createdAt</code> once the booking is saved.</li>
+      <li><code>GET /movies/{id}</code> is the only endpoint currently backed by Ehcache.</li>
+      <li>The third-ticket offer configuration is driven by <code>booking.pricing.third-ticket-offer-cities</code> and <code>booking.pricing.third-ticket-offer-theatres</code>.</li>
+    </ul>
+
+    <p class="small">Generated from the current codebase endpoint set on 2026-04-04.</p>
+  </div>
+</body>
+</html>
