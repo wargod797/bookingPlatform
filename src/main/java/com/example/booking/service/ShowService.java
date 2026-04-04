@@ -4,6 +4,7 @@ import com.example.booking.exception.InvalidBookingRequestException;
 import com.example.booking.exception.ResourceNotFoundException;
 import com.example.booking.model.Movie;
 import com.example.booking.model.Seat;
+import com.example.booking.model.SeatAvailabilityResponse;
 import com.example.booking.model.SeatInventoryRequest;
 import com.example.booking.model.Show;
 import com.example.booking.model.ShowRequest;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -104,6 +106,16 @@ public class ShowService {
                 .toList();
 
         return seatRepository.saveAll(seats);
+    }
+
+    public List<SeatAvailabilityResponse> getSeatAvailability(Long showId) {
+        showRepository.findById(showId)
+                .orElseThrow(() -> new ResourceNotFoundException("Show not found: " + showId));
+
+        return seatRepository.findByShowId(showId).stream()
+                .sorted(Comparator.comparing(Seat::getSeatNumber))
+                .map(SeatAvailabilityResponse::from)
+                .toList();
     }
 
     private List<String> normalizeSeatNumbers(List<String> seatNumbers) {

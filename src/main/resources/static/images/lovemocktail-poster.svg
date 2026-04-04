@@ -1,0 +1,31 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="90" y1="40" x2="700" y2="920" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8A5B"/>
+      <stop offset="0.45" stop-color="#F43F5E"/>
+      <stop offset="1" stop-color="#4F46E5"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="290" y1="310" x2="520" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF1E8" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#FFE1F2" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(400 310) rotate(90) scale(380 260)">
+      <stop stop-color="#FFD9C9" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#FFD9C9" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1000" rx="38" fill="url(#bg)"/>
+  <rect x="30" y="30" width="740" height="940" rx="28" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="2"/>
+  <ellipse cx="400" cy="308" rx="280" ry="205" fill="url(#glow)"/>
+  <path d="M305 278C305 228.847 344.847 189 394 189C427.456 189 457.643 207.627 472.5 237.078C487.357 207.627 517.544 189 551 189C600.153 189 640 228.847 640 278C640 404.704 472.5 507 472.5 507C472.5 507 305 404.704 305 278Z" fill="#FFD5E6" fill-opacity="0.48"/>
+  <path d="M421 308L454 703C456.008 726.978 437.103 747.5 413 747.5H390C365.897 747.5 346.992 726.978 349 703L382 308H421Z" fill="url(#glass)"/>
+  <path d="M304 306C304 291.641 315.641 280 330 280H472C486.359 280 498 291.641 498 306C498 320.359 486.359 332 472 332H330C315.641 332 304 320.359 304 306Z" fill="#FFF7F2" fill-opacity="0.9"/>
+  <path d="M360 392C389.5 374 420 370 444 380C476 394 505 432 507 462C509 499 478 531 432 535C393 538 357 510 346 474C337 443 343 412 360 392Z" fill="#FF7AA8" fill-opacity="0.74"/>
+  <path d="M382 252C382 218.863 408.863 192 442 192H450C483.137 192 510 218.863 510 252V280H382V252Z" fill="#FFF5EF" fill-opacity="0.78"/>
+  <path d="M493 170L565 72" stroke="#FDE7F3" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="574" cy="63" r="18" fill="#FFF7CC"/>
+  <path d="M543 103C543 82.5655 559.565 66 580 66C591.468 66 601.716 71.2183 608.5 79.4038C615.284 71.2183 625.532 66 637 66C657.435 66 674 82.5655 674 103C674 160.445 608.5 202 608.5 202C608.5 202 543 160.445 543 103Z" fill="#FFE1ED" fill-opacity="0.8"/>
+  <text x="82" y="805" fill="#FFF8F1" font-family="'Trebuchet MS', 'Segoe UI', sans-serif" font-size="98" font-weight="700" letter-spacing="4">LOVE</text>
+  <text x="82" y="888" fill="#FFF8F1" font-family="'Trebuchet MS', 'Segoe UI', sans-serif" font-size="88" font-weight="900" letter-spacing="3">MOCKTAIL</text>
+  <text x="88" y="934" fill="#FFE7D8" font-family="'Trebuchet MS', 'Segoe UI', sans-serif" font-size="24" letter-spacing="6">ROMANCE . MUSIC . CITY NIGHTS</text>
+</svg>

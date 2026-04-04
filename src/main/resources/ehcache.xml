@@ -15,4 +15,37 @@
             <offheap unit="MB">10</offheap>
         </resources>
     </cache>
+    <cache alias="locationDirectory">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.LinkedHashMap</value-type>
+        <expiry>
+            <ttl unit="minutes">180</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">20</heap>
+            <offheap unit="MB">5</offheap>
+        </resources>
+    </cache>
+    <cache alias="locationCountries">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.ArrayList</value-type>
+        <expiry>
+            <ttl unit="minutes">180</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">10</heap>
+            <offheap unit="MB">2</offheap>
+        </resources>
+    </cache>
+    <cache alias="locationCities">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+        <expiry>
+            <ttl unit="minutes">180</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">100</heap>
+            <offheap unit="MB">5</offheap>
+        </resources>
+    </cache>
 </config>

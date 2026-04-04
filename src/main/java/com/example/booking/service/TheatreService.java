@@ -4,10 +4,13 @@ import com.example.booking.exception.InvalidBookingRequestException;
 import com.example.booking.model.City;
 import com.example.booking.model.Theatre;
 import com.example.booking.model.TheatreOnboardingRequest;
+import com.example.booking.model.TheatreResponse;
 import com.example.booking.repository.CityRepository;
 import com.example.booking.repository.TheatreRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TheatreService {
@@ -44,6 +47,19 @@ public class TheatreService {
                 .build();
 
         return theatreRepository.save(theatre);
+    }
+
+    public List<String> getPartnerCities() {
+        return cityRepository.findAllByOrderByNameAsc().stream()
+                .map(City::getName)
+                .toList();
+    }
+
+    public List<TheatreResponse> getTheatres(String cityName) {
+        String normalizedCity = isBlank(cityName) ? null : cityName.trim();
+        return theatreRepository.findByOptionalCityOrdered(normalizedCity).stream()
+                .map(TheatreResponse::from)
+                .toList();
     }
 
     private boolean isBlank(String value) {

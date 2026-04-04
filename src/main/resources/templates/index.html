@@ -10,18 +10,38 @@
 <div class="page-shell">
     <header class="hero">
         <section class="hero-copy">
-            <p class="eyebrow">Spring Boot + Thymeleaf Frontend</p>
-            <h1>Launch a sharper booking experience without changing the backend contract.</h1>
-            <p class="hero-text">
-                This page is rendered by Spring MVC with Thymeleaf and drives the same partner and customer APIs
-                already implemented in the service layer. Use it to seed data, run pricing scenarios, and demo
-                the platform end to end from one polished control room.
-            </p>
+            <div class="hero-topbar">
+                <div class="studio-mark">
+                    <p class="eyebrow">Booking Platform Studio</p>
+                    <p class="hero-tagline">Spring booking control center for admin setup and customer journeys.</p>
+                </div>
+                <div class="role-switcher">
+                    <p class="role-switcher-label">User Type</p>
+                    <section class="role-selector role-selector--hero">
+                        <button class="role-card" type="button" data-role="admin">
+                            <span class="role-chip">Admin</span>
+                            <h2>Admin</h2>
+                            <p>Setup theatres, movies, shows, and seats.</p>
+                        </button>
+                        <button class="role-card" type="button" data-role="customer">
+                            <span class="role-chip">Customer</span>
+                            <h2>Customer</h2>
+                            <p>Browse by city and book tickets.</p>
+                        </button>
+                    </section>
+                </div>
+            </div>
 
-            <div class="hero-actions">
-                <button class="ghost-button" type="button" data-preset="mumbai">Load Mumbai Offer Scenario</button>
-                <button class="ghost-button" type="button" data-preset="delhi">Load Delhi Afternoon Scenario</button>
-                <a class="outline-link" th:href="@{/swagger-ui/index.html}" href="/swagger-ui/index.html" target="_blank" rel="noreferrer">Open Swagger UI</a>
+            <h1>Run theatre operations and customer booking from one cinematic workspace.</h1>
+            <p class="hero-text">
+                The admin side is built for theatre onboarding, movie creation, show publishing, and seat allocation.
+                The customer side is tuned for movie discovery, location-led browsing, seat selection, and booking
+                against the real Spring Boot APIs.
+            </p>
+            <div class="hero-pill-strip">
+                <span class="hero-pill">Role-aware workflow</span>
+                <span class="hero-pill">Live pricing responses</span>
+                <span class="hero-pill">City-backed discovery</span>
             </div>
 
             <div class="highlight-grid">
@@ -36,30 +56,24 @@
             <div class="visual-stage">
                 <img class="stage-image" th:src="@{/images/cinema-stage.svg}" src="/images/cinema-stage.svg" alt="Cinema control room illustration">
             </div>
-
-            <div class="scenario-ribbon">
-                <article class="scenario-card" th:each="scenario : ${scenarioCards}">
-                    <img class="scenario-image" th:src="${scenario.imagePath}" src="/images/interstellar-poster.svg" th:alt="${scenario.title}">
-                    <div class="scenario-copy">
-                        <p class="scenario-eyebrow" th:text="${scenario.eyebrow}">Scenario</p>
-                        <h3 th:text="${scenario.title}">Scenario Title</h3>
-                        <p th:text="${scenario.description}">Scenario description</p>
-                        <button class="scenario-button" type="button" th:attr="data-preset=${scenario.presetName}">Use This Scenario</button>
-                    </div>
-                </article>
+            <div class="hero-visual-copy">
+                <p class="mini-eyebrow">Showcase</p>
+                <h2>Featured screening wall</h2>
+                <p>Poster-led discovery now mirrors the movies flowing through the booking journey, so the page feels closer to a real theatre product instead of a plain admin console.</p>
+            </div>
+            <div class="poster-row">
+                <img class="poster-card" th:src="@{/images/interstellar-poster.svg}" src="/images/interstellar-poster.svg" alt="Mumbai scenario poster">
+                <img class="poster-card" th:src="@{/images/inception-poster.svg}" src="/images/inception-poster.svg" alt="Delhi scenario poster">
+                <img class="poster-card" th:src="@{/images/lovemocktail-poster.svg}" src="/images/lovemocktail-poster.svg" alt="LoveMocktail poster">
             </div>
         </aside>
     </header>
 
-    <section class="journey-strip">
-        <article class="journey-card" th:each="step : ${journeySteps}">
-            <span class="journey-number" th:text="${step.number}">01</span>
-            <h2 th:text="${step.title}">Journey Step</h2>
-            <p th:text="${step.description}">Journey description</p>
-        </article>
-    </section>
-
     <section class="state-strip">
+        <article class="state-card">
+            <span class="state-label">Active Role</span>
+            <strong id="state-role">Choose one</strong>
+        </article>
         <article class="state-card">
             <span class="state-label">Theatre ID</span>
             <strong id="state-theatre-id">-</strong>
@@ -72,21 +86,38 @@
             <span class="state-label">Show ID</span>
             <strong id="state-show-id">-</strong>
         </article>
-        <article class="state-card">
-            <span class="state-label">Booking ID</span>
-            <strong id="state-booking-id">-</strong>
-        </article>
         <article class="state-card state-featured">
-            <span class="state-label">Scenario Hint</span>
-            <strong id="scenario-hint">Choose a preset to prefill the offer and afternoon scenarios.</strong>
+            <span class="state-label">Booking Insight</span>
+            <strong id="scenario-hint">Pick Admin or Customer to unlock the correct workspace.</strong>
         </article>
     </section>
 
-    <main class="workspace-grid">
-        <section class="workspace-panel">
+    <main class="dashboard-layout">
+        <section class="experience-panel experience-panel--placeholder" id="role-placeholder">
             <div class="panel-header">
-                <p class="panel-kicker">Partner Studio</p>
-                <h2>Seed the platform with theatres, movies, shows, and inventory</h2>
+                <p class="panel-kicker">Role Selection</p>
+                <h2>Start by choosing how you want to use the platform</h2>
+            </div>
+            <div class="empty-panel">
+                <h3>Admin</h3>
+                <p>Onboard theatres, add movies, publish shows, and allocate seats so the catalog becomes bookable.</p>
+                <h3>Customer</h3>
+                <p>Select a movie, choose a country and online-backed city list, filter by date and time, then pick seats.</p>
+            </div>
+        </section>
+
+        <section class="experience-panel hidden" id="admin-panel" data-role-panel="admin">
+            <div class="panel-header">
+                <p class="panel-kicker">Admin Workspace</p>
+                <h2>Set up theatres, content, showtimes, and inventory</h2>
+            </div>
+
+            <div class="journey-strip">
+                <article class="journey-card" th:each="step : ${journeySteps}">
+                    <span class="journey-number" th:text="${step.number}">01</span>
+                    <h3 th:text="${step.title}">Journey Step</h3>
+                    <p th:text="${step.description}">Journey description</p>
+                </article>
             </div>
 
             <div class="form-stack">
@@ -94,28 +125,50 @@
                     <div class="form-header">
                         <div>
                             <p class="mini-eyebrow">Theatre Onboarding</p>
-                            <h3>Create partner theatre</h3>
+                            <h3>Create theatre partner</h3>
                         </div>
                         <span class="endpoint-chip">POST /partners/theatres</span>
                     </div>
-                    <div class="field-grid">
+                    <div class="field-grid field-grid--four">
                         <label>
-                            <span>Theatre Name</span>
-                            <input name="theatreName" value="PVR Andheri" required>
+                            <span>Theatre Chain</span>
+                            <select id="admin-theatre-brand" name="theatreBrand">
+                                <option value="PVR Cinemas" selected>PVR Cinemas</option>
+                                <option value="INOX Movies">INOX Movies</option>
+                                <option value="Cinepolis">Cinepolis</option>
+                                <option value="Miraj Cinemas">Miraj Cinemas</option>
+                                <option value="Carnival Cinemas">Carnival Cinemas</option>
+                                <option value="Asian Cinemas">Asian Cinemas</option>
+                                <option value="Mukta A2 Cinemas">Mukta A2 Cinemas</option>
+                                <option value="Independent Theatre">Independent Theatre</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Branch / Area</span>
+                            <input name="theatreBranch" value="Andheri" placeholder="Andheri" required>
+                        </label>
+                        <label>
+                            <span>Country</span>
+                            <select id="admin-country" name="country">
+                                <option value="">Loading countries...</option>
+                            </select>
                         </label>
                         <label>
                             <span>City Name</span>
-                            <input name="cityName" value="Mumbai" required>
+                            <select id="admin-onboard-city" name="cityName">
+                                <option value="">Loading cities...</option>
+                            </select>
                         </label>
                     </div>
-                    <button type="submit">Onboard Theatre</button>
+                    <p class="inline-caption">Major theatre brands are preloaded for faster onboarding. The branch or area is appended to build the theatre name sent to the backend.</p>
+                    <button type="submit">Create Theatre</button>
                 </form>
 
                 <form class="form-card" id="movie-form">
                     <div class="form-header">
                         <div>
                             <p class="mini-eyebrow">Movie Catalog</p>
-                            <h3>Create movie entry</h3>
+                            <h3>Add movie</h3>
                         </div>
                         <span class="endpoint-chip">POST /movies</span>
                     </div>
@@ -136,113 +189,63 @@
                     <button type="submit">Create Movie</button>
                 </form>
 
-                <form class="form-card" id="show-form">
+                <div class="dual-form-grid">
+                    <form class="form-card" id="show-form">
                     <div class="form-header">
                         <div>
                             <p class="mini-eyebrow">Show Setup</p>
-                            <h3>Publish a showtime</h3>
+                            <h3>Publish showtime with dropdown selections</h3>
                         </div>
                         <span class="endpoint-chip">POST /partners/shows</span>
                     </div>
                     <div class="field-grid field-grid--three">
                         <label>
-                            <span>Movie ID</span>
-                            <input name="movieId" value="1" required>
-                        </label>
-                        <label>
-                            <span>Theatre ID</span>
-                            <input name="theatreId" value="1" required>
-                        </label>
-                        <label>
-                            <span>Price</span>
-                            <input name="price" type="number" step="0.01" min="0" value="100" required>
-                        </label>
-                        <label>
-                            <span>Show Date</span>
-                            <input name="showDate" type="date" value="2026-04-04" required>
-                        </label>
-                        <label>
-                            <span>Show Time</span>
-                            <input name="showTime" type="time" value="13:00" required>
-                        </label>
-                    </div>
-                    <button type="submit">Create Show</button>
-                </form>
-
-                <form class="form-card" id="seat-form">
-                    <div class="form-header">
-                        <div>
-                            <p class="mini-eyebrow">Seat Inventory</p>
-                            <h3>Allocate seat numbers</h3>
-                        </div>
-                        <span class="endpoint-chip">POST /partners/shows/{showId}/seats</span>
-                    </div>
-                    <div class="field-grid">
-                        <label>
-                            <span>Show ID</span>
-                            <input name="showId" value="1" required>
-                        </label>
-                        <label class="field-span">
-                            <span>Seat Numbers</span>
-                            <input name="seatNumbers" value="A1, A2, A3, A4, A5" required>
-                        </label>
-                    </div>
-                    <button type="submit">Allocate Inventory</button>
-                </form>
-            </div>
-        </section>
-
-        <section class="workspace-panel workspace-panel--wide">
-            <div class="panel-header">
-                <p class="panel-kicker">Customer Journey</p>
-                <h2>Browse running shows, reserve seats, and verify bookings</h2>
-            </div>
-
-            <div class="form-stack">
-                <form class="form-card" id="browse-form">
-                    <div class="form-header">
-                        <div>
-                            <p class="mini-eyebrow">Browse</p>
-                            <h3>Find running shows</h3>
-                        </div>
-                        <span class="endpoint-chip">GET /browse/shows</span>
-                    </div>
-                    <div class="field-grid">
-                        <label>
-                            <span>Movie ID</span>
-                            <input name="movieId" value="1" required>
+                            <span>Movie</span>
+                            <select id="admin-movie" name="movieId">
+                                <option value="">Loading movies...</option>
+                            </select>
                         </label>
                         <label>
                             <span>City</span>
-                            <input name="city" value="Mumbai" required>
+                            <select id="admin-city-filter">
+                                <option value="">Loading partner cities...</option>
+                            </select>
                         </label>
                         <label>
-                            <span>Date</span>
-                            <input name="date" type="date" value="2026-04-04" required>
+                            <span>Theatre Name</span>
+                            <select id="admin-theatre" name="theatreId">
+                                <option value="">Loading theatres...</option>
+                            </select>
                         </label>
-                    </div>
-                    <button type="submit">Browse Shows</button>
-                </form>
-
-                <section class="result-board">
-                    <div class="result-header">
-                        <div>
-                            <p class="mini-eyebrow">Show Discovery</p>
-                            <h3>Browse results</h3>
+                        <label>
+                            <span>Price</span>
+                                <input name="price" type="number" min="0" step="0.01" value="100" required>
+                            </label>
+                            <label class="picker-label">
+                                <span>Show Date</span>
+                                <div class="picker-shell">
+                                    <input id="admin-show-date" class="picker-input" name="showDate" type="date" value="2026-04-04" required>
+                                    <button class="picker-trigger" type="button" data-picker-for="admin-show-date" aria-label="Open calendar for show date">Calendar</button>
+                                </div>
+                            </label>
+                            <label class="picker-label">
+                                <span>Show Time</span>
+                                <div class="picker-shell">
+                                    <input id="admin-show-time" class="picker-input" name="showTime" type="time" value="13:00" required>
+                                    <button class="picker-trigger" type="button" data-picker-for="admin-show-time" aria-label="Open clock for show time">Clock</button>
+                                </div>
+                            </label>
                         </div>
-                        <span class="inline-note">Use a result card to prefill the show ID.</span>
-                    </div>
-                    <div class="browse-results" id="browse-results"></div>
-                </section>
+                        <button type="submit">Create Show</button>
+                    </form>
 
-                <div class="dual-form-grid">
-                    <form class="form-card" id="booking-form">
+                    <form class="form-card" id="seat-form">
                         <div class="form-header">
                             <div>
-                                <p class="mini-eyebrow">Booking</p>
-                                <h3>Reserve seats</h3>
+                                <p class="mini-eyebrow">Seat Inventory</p>
+                                <h3>Allocate seats</h3>
                             </div>
-                            <span class="endpoint-chip">POST /bookings</span>
+                            <span class="endpoint-chip">POST /partners/shows/{showId}/seats</span>
                         </div>
                         <div class="field-grid">
                             <label>
@@ -250,112 +253,143 @@
                                 <input name="showId" value="1" required>
                             </label>
                             <label class="field-span">
-                                <span>Seats</span>
-                                <input name="seats" value="A1, A2, A3" required>
+                                <span>Seat Numbers</span>
+                                <input name="seatNumbers" value="A1, A2, A3, A4, A5" required>
                             </label>
                         </div>
-                        <button type="submit">Book Tickets</button>
-                    </form>
-
-                    <form class="form-card" id="booking-lookup-form">
-                        <div class="form-header">
-                            <div>
-                                <p class="mini-eyebrow">Lookup</p>
-                                <h3>Fetch booking details</h3>
-                            </div>
-                            <span class="endpoint-chip">GET /bookings/{id}</span>
-                        </div>
-                        <div class="field-grid">
-                            <label>
-                                <span>Booking ID</span>
-                                <input name="bookingId" value="1" required>
-                            </label>
-                        </div>
-                        <button type="submit">Fetch Booking</button>
+                        <button type="submit">Allocate Seats</button>
                     </form>
                 </div>
             </div>
         </section>
 
-        <aside class="workspace-panel workspace-panel--aside">
+        <section class="experience-panel hidden" id="customer-panel" data-role-panel="customer">
             <div class="panel-header">
-                <p class="panel-kicker">Response Console</p>
-                <h2>Inspect payloads, movie reads, and endpoint coverage</h2>
+                <p class="panel-kicker">Customer Workspace</p>
+                <h2>Pick a movie, country, city, date, and time before selecting seats</h2>
             </div>
 
-            <div class="form-stack">
-                <form class="form-card form-card--compact" id="movie-list-form">
-                    <div class="form-header">
-                        <div>
-                            <p class="mini-eyebrow">Catalog Query</p>
-                            <h3>List movies</h3>
+            <form class="form-card" id="user-discovery-form">
+                <div class="form-header">
+                    <div>
+                        <p class="mini-eyebrow">Discover Shows</p>
+                        <h3>Browse by location and preferred timing</h3>
+                    </div>
+                    <span class="endpoint-chip">GET /browse/shows</span>
+                </div>
+                <div class="field-grid field-grid--three">
+                    <label>
+                        <span>Movie</span>
+                        <select id="user-movie" name="movieId">
+                            <option value="">Loading movies...</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Country</span>
+                        <select id="user-country" name="country">
+                            <option value="">Loading countries...</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>City</span>
+                        <select id="user-city" name="city">
+                            <option value="">Loading cities...</option>
+                        </select>
+                    </label>
+                    <label class="picker-label">
+                        <span>Date</span>
+                        <div class="picker-shell">
+                            <input id="customer-show-date" class="picker-input" name="date" type="date" value="2026-04-04" required>
+                            <button class="picker-trigger" type="button" data-picker-for="customer-show-date" aria-label="Open calendar for customer date">Calendar</button>
                         </div>
-                        <span class="endpoint-chip">GET /movies</span>
-                    </div>
-                    <div class="field-grid">
-                        <label>
-                            <span>Genre</span>
-                            <input name="genre" placeholder="Optional">
-                        </label>
-                        <label>
-                            <span>Language</span>
-                            <input name="language" placeholder="Optional">
-                        </label>
-                    </div>
-                    <button type="submit">Fetch Movies</button>
-                </form>
+                    </label>
+                    <label class="picker-label">
+                        <span>Preferred Time</span>
+                        <div class="picker-shell">
+                            <input id="customer-show-time" class="picker-input" name="time" type="time" value="13:00">
+                            <button class="picker-trigger" type="button" data-picker-for="customer-show-time" aria-label="Open clock for preferred time">Clock</button>
+                        </div>
+                    </label>
+                </div>
+                <p class="inline-caption">Cities are loaded from an online-backed directory through the Spring backend, with fallback data if the external service is unavailable. Date fields open a calendar and time fields open a clock picker in supported browsers.</p>
+                <button type="submit">Browse Shows</button>
+            </form>
 
-                <form class="form-card form-card--compact" id="movie-by-id-form">
-                    <div class="form-header">
-                        <div>
-                            <p class="mini-eyebrow">Cached Read</p>
-                            <h3>Fetch movie by id</h3>
-                        </div>
-                        <span class="endpoint-chip">GET /movies/{id}</span>
+            <section class="result-board">
+                <div class="result-header">
+                    <div>
+                        <p class="mini-eyebrow">Matching Shows</p>
+                        <h3>Available options for the selected city and date</h3>
                     </div>
-                    <div class="field-grid">
-                        <label>
-                            <span>Movie ID</span>
-                            <input name="movieId" value="1" required>
-                        </label>
-                    </div>
-                    <button type="submit">Fetch Movie</button>
-                </form>
+                    <span class="inline-note" id="user-result-note">Use the form above to search.</span>
+                </div>
+                <div class="browse-results" id="browse-results"></div>
+            </section>
 
-                <section class="response-console">
-                    <div class="response-top">
-                        <div>
-                            <p class="mini-eyebrow">Live Response</p>
-                            <h3 id="response-title">Waiting for a request</h3>
-                        </div>
-                        <span class="response-pill" id="response-status">Idle</span>
+            <section class="seat-section hidden" id="seat-section">
+                <div class="result-header">
+                    <div>
+                        <p class="mini-eyebrow">Seat Selection</p>
+                        <h3 id="seat-section-title">Choose seats for the selected show</h3>
                     </div>
-                    <div class="response-output" id="response-output">
-                        <p class="placeholder-copy">Run any action from the page to inspect the response payload here.</p>
+                    <span class="inline-note" id="seat-section-note">Only available seats can be selected.</span>
+                </div>
+                <div class="seat-layout">
+                    <div class="screen-badge">Screen</div>
+                    <div class="seat-grid" id="seat-grid"></div>
+                </div>
+                <div class="booking-summary">
+                    <div>
+                        <p class="mini-eyebrow">Selected Seats</p>
+                        <h3 id="selected-seats-label">None selected</h3>
+                        <p id="selected-show-label" class="summary-copy">Choose a show to load seat inventory.</p>
                     </div>
-                </section>
+                    <button id="book-selected-seats" type="button" disabled>Book Selected Seats</button>
+                </div>
+            </section>
 
-                <section class="endpoint-panel">
-                    <article class="endpoint-group" th:each="group : ${endpointGroups}">
-                        <div class="endpoint-header">
-                            <h3 th:text="${group.title}">Endpoint Group</h3>
-                            <p th:text="${group.description}">Group description</p>
-                        </div>
-                        <ul class="endpoint-list">
-                            <li th:each="item : ${group.items}">
-                                <span class="method-chip" th:text="${item.method}">GET</span>
-                                <div>
-                                    <strong th:text="${item.path}">/path</strong>
-                                    <p th:text="${item.description}">Description</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </article>
-                </section>
-            </div>
+            <section class="booking-success hidden" id="booking-success">
+                <p class="mini-eyebrow">Booking Confirmed</p>
+                <h3 id="booking-success-title">Your booking is ready.</h3>
+                <p id="booking-success-copy">Final total and booking details will appear here after a successful reservation.</p>
+            </section>
+        </section>
+
+        <aside class="side-rail">
+            <section class="response-console">
+                <div class="response-top">
+                    <div>
+                        <p class="mini-eyebrow">Live Response</p>
+                        <h3 id="response-title">Waiting for a request</h3>
+                    </div>
+                    <span class="response-pill" id="response-status">Idle</span>
+                </div>
+                <div class="response-output" id="response-output">
+                    <p class="placeholder-copy">Use the Admin or Customer workspace to call backend APIs. The JSON response for the latest action will appear here.</p>
+                </div>
+            </section>
+
+            <section class="endpoint-panel">
+                <article class="endpoint-group" th:each="group : ${endpointGroups}">
+                    <div class="endpoint-header">
+                        <h3 th:text="${group.title}">Endpoint Group</h3>
+                        <p th:text="${group.description}">Group description</p>
+                    </div>
+                    <ul class="endpoint-list">
+                        <li th:each="item : ${group.items}">
+                            <span class="method-chip" th:text="${item.method}">GET</span>
+                            <div>
+                                <strong th:text="${item.path}">/path</strong>
+                                <p th:text="${item.description}">Description</p>
+                            </div>
+                        </li>
+                    </ul>
+                </article>
+            </section>
         </aside>
     </main>
 </div>
+<div class="signature-mark">Sridhara R(Wargod797)</div>
 
 <script th:src="@{/app.js}" src="/app.js"></script>
 </body>

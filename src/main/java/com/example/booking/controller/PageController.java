@@ -13,7 +13,7 @@ public class PageController {
     public String home(Model model) {
         model.addAttribute("highlights", List.of(
                 new Highlight("Spring Frontend", "Rendered with Thymeleaf on top of the existing Spring Boot backend."),
-                new Highlight("Scenario Ready", "Mumbai and Delhi presets mirror the pricing cases used in the domain exercise."),
+                new Highlight("Admin + Customer Roles", "The homepage now separates platform management from customer booking journeys."),
                 new Highlight("Live API Console", "Each form calls the real endpoints and streams the response into the UI.")
         ));
 
@@ -47,6 +47,8 @@ public class PageController {
                         "Setup endpoints used to prepare theatres, shows, and seat inventory.",
                         List.of(
                                 new EndpointItem("POST", "/partners/theatres", "Onboard a theatre in a city."),
+                                new EndpointItem("GET", "/partners/theatres/cities", "List onboarded cities for admin dropdowns."),
+                                new EndpointItem("GET", "/partners/theatres?city=...", "List onboarded theatres for the selected city."),
                                 new EndpointItem("POST", "/partners/shows", "Create a show for a movie and theatre."),
                                 new EndpointItem("POST", "/partners/shows/{showId}/seats", "Allocate seat numbers for a show.")
                         )
@@ -56,17 +58,20 @@ public class PageController {
                         "Read and write endpoints that power the browsing and booking journey.",
                         List.of(
                                 new EndpointItem("GET", "/browse/shows", "Browse by movie, city, and date."),
+                                new EndpointItem("GET", "/shows/{showId}/seats", "Load seat availability for the selected show."),
                                 new EndpointItem("POST", "/bookings", "Book seats for a selected show."),
                                 new EndpointItem("GET", "/bookings/{id}", "Fetch a booking by id.")
                         )
                 ),
                 new EndpointGroup(
-                        "Movie APIs",
-                        "Catalog endpoints that let the UI create and inspect movies.",
+                        "Directory APIs",
+                        "Catalog and location endpoints that feed the customer discovery flow.",
                         List.of(
                                 new EndpointItem("POST", "/movies", "Create a movie entry."),
                                 new EndpointItem("GET", "/movies", "List movies with optional filters."),
-                                new EndpointItem("GET", "/movies/{id}", "Fetch a movie and exercise the cache path.")
+                                new EndpointItem("GET", "/movies/{id}", "Fetch a movie and exercise the cache path."),
+                                new EndpointItem("GET", "/ui/locations/countries", "Load countries for the customer location form."),
+                                new EndpointItem("GET", "/ui/locations/cities?country=...", "Load cities from the online-backed directory.")
                         )
                 )
         ));

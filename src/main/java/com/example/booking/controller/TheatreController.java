@@ -7,6 +7,8 @@ import com.example.booking.service.TheatreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/partners/theatres")
 public class TheatreController {
@@ -22,5 +24,15 @@ public class TheatreController {
     public TheatreResponse onboardTheatre(@RequestBody TheatreOnboardingRequest request) {
         Theatre theatre = theatreService.onboardTheatre(request);
         return TheatreResponse.from(theatre);
+    }
+
+    @GetMapping
+    public List<TheatreResponse> getTheatres(@RequestParam(required = false) String city) {
+        return theatreService.getTheatres(city);
+    }
+
+    @GetMapping("/cities")
+    public List<String> getPartnerCities() {
+        return theatreService.getPartnerCities();
     }
 }
