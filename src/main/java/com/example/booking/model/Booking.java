@@ -1,21 +1,39 @@
 package com.example.booking.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Table(name = "booking")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Booking {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String customerName;
-    @ManyToOne
-    private Movie movie;
-    // getters and setters omitted for brevity
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "show_id")
+    private Show show;
+
+    @Column(nullable = false)
+    private double totalPrice;
+
+    @ManyToMany
+    @JoinTable(
+            name = "booking_seat",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "seat_id")
+    )
+    private List<Seat> seats;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 }
