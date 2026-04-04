@@ -38,6 +38,16 @@ src/main/resources
 `-- ehcache.xml
 ```
 
+## Architecture Diagram
+```mermaid
+flowchart LR
+    U["Client"] --> C["REST Controllers"]
+    C --> S["Services"]
+    S --> R["Spring Data Repositories"]
+    R --> DB["PostgreSQL"]
+    S --> CACHE["Spring Cache / Ehcache"]
+```
+
 ## Domain Model
 The main entities are:
 
@@ -218,6 +228,34 @@ Current cached paths in the codebase:
 
 Ehcache configuration is stored in `src/main/resources/ehcache.xml`.
 
+## Why Ehcache Instead Of Redis
+The current project is configured to use Ehcache through JCache even though Docker Compose also provisions Redis.
+
+Ehcache was the better fit for the current implementation because:
+
+- the application is presently designed as a single Spring Boot service
+- the main cache need is fast local caching for read-heavy lookups such as movies and browse results
+- Ehcache works in-process, so there is no extra network hop for cache reads
+- it keeps local development simpler because the app can cache effectively without depending on an external cache service
+- the current cache footprint is small and well suited to in-memory local caching
+
+Redis is still present in the repository as a future-ready option, but it is not the active cache backend for this version of the project.
+
+### Ehcache vs Redis
+| Area | Ehcache | Redis |
+|---|---|---|
+| Deployment model | Embedded in the application JVM | Separate cache server |
+| Network hop | No | Yes |
+| Setup complexity | Low | Medium |
+| Best fit | Single-instance application caching | Shared cache across multiple app instances |
+| Operational overhead | Low | Higher |
+| Local development | Simple | Requires external service |
+| Horizontal scaling support | Limited | Strong |
+| Current fit for this project | Strong | Future option |
+
+### Current Decision
+For this booking platform, Ehcache is the preferred default because the current codebase is optimized for a simple, single-application deployment and does not yet require distributed cache coordination.
+
 ## Repository Layer
 Custom repository queries currently used:
 
@@ -245,4 +283,3 @@ These are important if you plan to extend or run the project:
 - add proper exception handling with structured API error responses
 - add integration tests for booking, browsing, and pricing
 - align Docker packaging and SQL schema with the current entity model
-
