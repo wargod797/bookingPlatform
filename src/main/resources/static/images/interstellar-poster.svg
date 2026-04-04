@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Interstellar style poster</title>
+  <desc id="desc">Abstract deep space poster with a bright ringed planet and glowing horizon.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#040811"/>
+      <stop offset="55%" stop-color="#10203b"/>
+      <stop offset="100%" stop-color="#1d3557"/>
+    </linearGradient>
+    <linearGradient id="orbit" x1="0%" x2="100%">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="45%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <circle cx="120" cy="140" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="214" cy="102" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="638" cy="164" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="702" cy="280" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="550" cy="92" r="4" fill="#ffffff" opacity="0.8"/>
+  <circle cx="98" cy="382" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="675" cy="420" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="156" cy="720" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="604" cy="782" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="394" cy="420" r="174" fill="#111827"/>
+  <ellipse cx="402" cy="430" rx="252" ry="70" fill="none" stroke="url(#orbit)" stroke-width="18" opacity="0.95"/>
+  <circle cx="394" cy="420" r="126" fill="#0f172a"/>
+  <circle cx="394" cy="420" r="116" fill="#1f2937"/>
+  <path d="M0 720 C160 650 260 700 400 650 C520 608 646 640 800 574 L800 1000 L0 1000 Z" fill="#07111d"/>
+  <path d="M0 740 C170 690 296 736 400 694 C530 642 650 674 800 626" fill="none" stroke="#1ecad4" stroke-width="2" opacity="0.5"/>
+  <text x="76" y="160" fill="#f8fafc" font-family="Segoe UI, Arial, sans-serif" font-size="34" letter-spacing="10">OFFER LOCATION</text>
+  <text x="72" y="860" fill="#fff7ed" font-family="Segoe UI, Arial, sans-serif" font-size="88" font-weight="700">INTERSTELLAR</text>
+  <text x="76" y="912" fill="#ffedd5" font-family="Segoe UI, Arial, sans-serif" font-size="32" letter-spacing="8">MUMBAI MATINEE · 200.0</text>
+</svg>

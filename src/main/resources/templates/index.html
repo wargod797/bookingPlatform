@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Platform Studio</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" href="/styles.css">
+</head>
+<body>
+<div class="page-shell">
+    <header class="hero">
+        <section class="hero-copy">
+            <p class="eyebrow">Spring Boot + Thymeleaf Frontend</p>
+            <h1>Launch a sharper booking experience without changing the backend contract.</h1>
+            <p class="hero-text">
+                This page is rendered by Spring MVC with Thymeleaf and drives the same partner and customer APIs
+                already implemented in the service layer. Use it to seed data, run pricing scenarios, and demo
+                the platform end to end from one polished control room.
+            </p>
+
+            <div class="hero-actions">
+                <button class="ghost-button" type="button" data-preset="mumbai">Load Mumbai Offer Scenario</button>
+                <button class="ghost-button" type="button" data-preset="delhi">Load Delhi Afternoon Scenario</button>
+                <a class="outline-link" th:href="@{/swagger-ui/index.html}" href="/swagger-ui/index.html" target="_blank" rel="noreferrer">Open Swagger UI</a>
+            </div>
+
+            <div class="highlight-grid">
+                <article class="highlight-card" th:each="highlight : ${highlights}">
+                    <h2 th:text="${highlight.title}">Highlight</h2>
+                    <p th:text="${highlight.description}">Description</p>
+                </article>
+            </div>
+        </section>
+
+        <aside class="hero-visual">
+            <div class="visual-stage">
+                <img class="stage-image" th:src="@{/images/cinema-stage.svg}" src="/images/cinema-stage.svg" alt="Cinema control room illustration">
+            </div>
+
+            <div class="scenario-ribbon">
+                <article class="scenario-card" th:each="scenario : ${scenarioCards}">
+                    <img class="scenario-image" th:src="${scenario.imagePath}" src="/images/interstellar-poster.svg" th:alt="${scenario.title}">
+                    <div class="scenario-copy">
+                        <p class="scenario-eyebrow" th:text="${scenario.eyebrow}">Scenario</p>
+                        <h3 th:text="${scenario.title}">Scenario Title</h3>
+                        <p th:text="${scenario.description}">Scenario description</p>
+                        <button class="scenario-button" type="button" th:attr="data-preset=${scenario.presetName}">Use This Scenario</button>
+                    </div>
+                </article>
+            </div>
+        </aside>
+    </header>
+
+    <section class="journey-strip">
+        <article class="journey-card" th:each="step : ${journeySteps}">
+            <span class="journey-number" th:text="${step.number}">01</span>
+            <h2 th:text="${step.title}">Journey Step</h2>
+            <p th:text="${step.description}">Journey description</p>
+        </article>
+    </section>
+
+    <section class="state-strip">
+        <article class="state-card">
+            <span class="state-label">Theatre ID</span>
+            <strong id="state-theatre-id">-</strong>
+        </article>
+        <article class="state-card">
+            <span class="state-label">Movie ID</span>
+            <strong id="state-movie-id">-</strong>
+        </article>
+        <article class="state-card">
+            <span class="state-label">Show ID</span>
+            <strong id="state-show-id">-</strong>
+        </article>
+        <article class="state-card">
+            <span class="state-label">Booking ID</span>
+            <strong id="state-booking-id">-</strong>
+        </article>
+        <article class="state-card state-featured">
+            <span class="state-label">Scenario Hint</span>
+            <strong id="scenario-hint">Choose a preset to prefill the offer and afternoon scenarios.</strong>
+        </article>
+    </section>
+
+    <main class="workspace-grid">
+        <section class="workspace-panel">
+            <div class="panel-header">
+                <p class="panel-kicker">Partner Studio</p>
+                <h2>Seed the platform with theatres, movies, shows, and inventory</h2>
+            </div>
+
+            <div class="form-stack">
+                <form class="form-card" id="theatre-form">
+                    <div class="form-header">
+                        <div>
+                            <p class="mini-eyebrow">Theatre Onboarding</p>
+                            <h3>Create partner theatre</h3>
+                        </div>
+                        <span class="endpoint-chip">POST /partners/theatres</span>
+                    </div>
+                    <div class="field-grid">
+                        <label>
+                            <span>Theatre Name</span>
+                            <input name="theatreName" value="PVR Andheri" required>
+                        </label>
+                        <label>
+                            <span>City Name</span>
+                            <input name="cityName" value="Mumbai" required>
+                        </label>
+                    </div>
+                    <button type="submit">Onboard Theatre</button>
+                </form>
+
+                <form class="form-card" id="movie-form">
+                    <div class="form-header">
+                        <div>
+                            <p class="mini-eyebrow">Movie Catalog</p>
+                            <h3>Create movie entry</h3>
+                        </div>
+                        <span class="endpoint-chip">POST /movies</span>
+                    </div>
+                    <div class="field-grid field-grid--three">
+                        <label>
+                            <span>Title</span>
+                            <input name="title" value="Interstellar" required>
+                        </label>
+                        <label>
+                            <span>Genre</span>
+                            <input name="genre" value="Sci-Fi" required>
+                        </label>
+                        <label>
+                            <span>Language</span>
+                            <input name="language" value="English" required>
+                        </label>
+                    </div>
+                    <button type="submit">Create Movie</button>
+                </form>
+
+                <form class="form-card" id="show-form">
+                    <div class="form-header">
+                        <div>
+                            <p class="mini-eyebrow">Show Setup</p>
+                            <h3>Publish a showtime</h3>
+                        </div>
+                        <span class="endpoint-chip">POST /partners/shows</span>
+                    </div>
+                    <div class="field-grid field-grid--three">
+                        <label>
+                            <span>Movie ID</span>
+                            <input name="movieId" value="1" required>
+                        </label>
+                        <label>
+                            <span>Theatre ID</span>
+                            <input name="theatreId" value="1" required>
+                        </label>
+                        <label>
+                            <span>Price</span>
+                            <input name="price" type="number" step="0.01" min="0" value="100" required>
+                        </label>
+                        <label>
+                            <span>Show Date</span>
+                            <input name="showDate" type="date" value="2026-04-04" required>
+                        </label>
+                        <label>
+                            <span>Show Time</span>
+                            <input name="showTime" type="time" value="13:00" required>
+                        </label>
+                    </div>
+                    <button type="submit">Create Show</button>
+                </form>
+
+                <form class="form-card" id="seat-form">
+                    <div class="form-header">
+                        <div>
+                            <p class="mini-eyebrow">Seat Inventory</p>
+                            <h3>Allocate seat numbers</h3>
+                        </div>
+                        <span class="endpoint-chip">POST /partners/shows/{showId}/seats</span>
+                    </div>
+                    <div class="field-grid">
+                        <label>
+                            <span>Show ID</span>
+                            <input name="showId" value="1" required>
+                        </label>
+                        <label class="field-span">
+                            <span>Seat Numbers</span>
+                            <input name="seatNumbers" value="A1, A2, A3, A4, A5" required>
+                        </label>
+                    </div>
+                    <button type="submit">Allocate Inventory</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="workspace-panel workspace-panel--wide">
+            <div class="panel-header">
+                <p class="panel-kicker">Customer Journey</p>
+                <h2>Browse running shows, reserve seats, and verify bookings</h2>
+            </div>
+
+            <div class="form-stack">
+                <form class="form-card" id="browse-form">
+                    <div class="form-header">
+                        <div>
+                            <p class="mini-eyebrow">Browse</p>
+                            <h3>Find running shows</h3>
+                        </div>
+                        <span class="endpoint-chip">GET /browse/shows</span>
+                    </div>
+                    <div class="field-grid">
+                        <label>
+                            <span>Movie ID</span>
+                            <input name="movieId" value="1" required>
+                        </label>
+                        <label>
+                            <span>City</span>
+                            <input name="city" value="Mumbai" required>
+                        </label>
+                        <label>
+                            <span>Date</span>
+                            <input name="date" type="date" value="2026-04-04" required>
+                        </label>
+                    </div>
+                    <button type="submit">Browse Shows</button>
+                </form>
+
+                <section class="result-board">
+                    <div class="result-header">
+                        <div>
+                            <p class="mini-eyebrow">Show Discovery</p>
+                            <h3>Browse results</h3>
+                        </div>
+                        <span class="inline-note">Use a result card to prefill the show ID.</span>
+                    </div>
+                    <div class="browse-results" id="browse-results"></div>
+                </section>
+
+                <div class="dual-form-grid">
+                    <form class="form-card" id="booking-form">
+                        <div class="form-header">
+                            <div>
+                                <p class="mini-eyebrow">Booking</p>
+                                <h3>Reserve seats</h3>
+                            </div>
+                            <span class="endpoint-chip">POST /bookings</span>
+                        </div>
+                        <div class="field-grid">
+                            <label>
+                                <span>Show ID</span>
+                                <input name="showId" value="1" required>
+                            </label>
+                            <label class="field-span">
+                                <span>Seats</span>
+                                <input name="seats" value="A1, A2, A3" required>
+                            </label>
+                        </div>
+                        <button type="submit">Book Tickets</button>
+                    </form>
+
+                    <form class="form-card" id="booking-lookup-form">
+                        <div class="form-header">
+                            <div>
+                                <p class="mini-eyebrow">Lookup</p>
+                                <h3>Fetch booking details</h3>
+                            </div>
+                            <span class="endpoint-chip">GET /bookings/{id}</span>
+                        </div>
+                        <div class="field-grid">
+                            <label>
+                                <span>Booking ID</span>
+                                <input name="bookingId" value="1" required>
+                            </label>
+                        </div>
+                        <button type="submit">Fetch Booking</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <aside class="workspace-panel workspace-panel--aside">
+            <div class="panel-header">
+                <p class="panel-kicker">Response Console</p>
+                <h2>Inspect payloads, movie reads, and endpoint coverage</h2>
+            </div>
+
+            <div class="form-stack">
+                <form class="form-card form-card--compact" id="movie-list-form">
+                    <div class="form-header">
+                        <div>
+                            <p class="mini-eyebrow">Catalog Query</p>
+                            <h3>List movies</h3>
+                        </div>
+                        <span class="endpoint-chip">GET /movies</span>
+                    </div>
+                    <div class="field-grid">
+                        <label>
+                            <span>Genre</span>
+                            <input name="genre" placeholder="Optional">
+                        </label>
+                        <label>
+                            <span>Language</span>
+                            <input name="language" placeholder="Optional">
+                        </label>
+                    </div>
+                    <button type="submit">Fetch Movies</button>
+                </form>
+
+                <form class="form-card form-card--compact" id="movie-by-id-form">
+                    <div class="form-header">
+                        <div>
+                            <p class="mini-eyebrow">Cached Read</p>
+                            <h3>Fetch movie by id</h3>
+                        </div>
+                        <span class="endpoint-chip">GET /movies/{id}</span>
+                    </div>
+                    <div class="field-grid">
+                        <label>
+                            <span>Movie ID</span>
+                            <input name="movieId" value="1" required>
+                        </label>
+                    </div>
+                    <button type="submit">Fetch Movie</button>
+                </form>
+
+                <section class="response-console">
+                    <div class="response-top">
+                        <div>
+                            <p class="mini-eyebrow">Live Response</p>
+                            <h3 id="response-title">Waiting for a request</h3>
+                        </div>
+                        <span class="response-pill" id="response-status">Idle</span>
+                    </div>
+                    <div class="response-output" id="response-output">
+                        <p class="placeholder-copy">Run any action from the page to inspect the response payload here.</p>
+                    </div>
+                </section>
+
+                <section class="endpoint-panel">
+                    <article class="endpoint-group" th:each="group : ${endpointGroups}">
+                        <div class="endpoint-header">
+                            <h3 th:text="${group.title}">Endpoint Group</h3>
+                            <p th:text="${group.description}">Group description</p>
+                        </div>
+                        <ul class="endpoint-list">
+                            <li th:each="item : ${group.items}">
+                                <span class="method-chip" th:text="${item.method}">GET</span>
+                                <div>
+                                    <strong th:text="${item.path}">/path</strong>
+                                    <p th:text="${item.description}">Description</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </article>
+                </section>
+            </div>
+        </aside>
+    </main>
+</div>
+
+<script th:src="@{/app.js}" src="/app.js"></script>
+</body>
+</html>

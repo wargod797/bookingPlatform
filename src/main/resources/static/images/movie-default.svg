@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Default movie poster</title>
+  <desc id="desc">Generic cinema poster with ticket and spotlight illustration.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#08111f"/>
+      <stop offset="50%" stop-color="#16243f"/>
+      <stop offset="100%" stop-color="#0a1425"/>
+    </linearGradient>
+    <linearGradient id="spot" x1="0%" x2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <path d="M240 120 L560 120 L682 508 L118 508 Z" fill="url(#spot)" opacity="0.18"/>
+  <rect x="172" y="246" width="456" height="344" rx="28" fill="#0d182a" stroke="#274164" stroke-width="4"/>
+  <path d="M246 410 C290 354 360 344 400 396 C444 344 510 354 554 410" fill="none" stroke="#f97316" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="286" cy="354" r="20" fill="#fff7ed"/>
+  <circle cx="514" cy="354" r="20" fill="#fff7ed"/>
+  <rect x="264" y="642" width="272" height="136" rx="20" fill="#0d182a" stroke="#325170" stroke-width="4"/>
+  <path d="M286 676 H514 V742 H286 Z" fill="#17273d"/>
+  <circle cx="312" cy="710" r="10" fill="#f97316"/>
+  <circle cx="356" cy="710" r="10" fill="#f97316"/>
+  <circle cx="400" cy="710" r="10" fill="#22d3ee"/>
+  <circle cx="444" cy="710" r="10" fill="#22d3ee"/>
+  <text x="400" y="868" text-anchor="middle" fill="#eff6ff" font-family="Segoe UI, Arial, sans-serif" font-size="86" font-weight="700">MOVIE NIGHT</text>
+  <text x="400" y="922" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, Arial, sans-serif" font-size="32" letter-spacing="10">BOOKING PLATFORM</text>
+</svg>

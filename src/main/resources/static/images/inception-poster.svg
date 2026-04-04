@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Inception style poster</title>
+  <desc id="desc">Abstract city corridor poster with perspective lines and warm-blue gradients.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#06101d"/>
+      <stop offset="45%" stop-color="#13263f"/>
+      <stop offset="100%" stop-color="#07111e"/>
+    </linearGradient>
+    <linearGradient id="cityGlow" x1="0%" x2="100%">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <path d="M130 0 L286 0 L368 1000 L162 1000 Z" fill="#10203a"/>
+  <path d="M514 0 L670 0 L638 1000 L432 1000 Z" fill="#0f1e37"/>
+  <path d="M210 0 L350 0 L396 1000 L250 1000 Z" fill="#132846"/>
+  <path d="M450 0 L590 0 L548 1000 L402 1000 Z" fill="#132846"/>
+  <path d="M94 600 C210 548 290 640 398 566 C530 476 610 602 720 540" fill="none" stroke="url(#cityGlow)" stroke-width="8" opacity="0.9"/>
+  <path d="M82 720 C196 664 302 748 400 680 C540 580 628 736 728 666" fill="none" stroke="#38bdf8" stroke-width="6" opacity="0.7"/>
+  <rect x="328" y="132" width="144" height="610" rx="32" fill="#08111f" stroke="#3b82f6" stroke-width="3"/>
+  <rect x="348" y="164" width="104" height="540" rx="24" fill="#0f172a"/>
+  <circle cx="400" cy="260" r="56" fill="#f97316" opacity="0.88"/>
+  <circle cx="400" cy="260" r="24" fill="#fde68a"/>
+  <circle cx="400" cy="260" r="94" fill="none" stroke="#fb923c" stroke-width="8" opacity="0.34"/>
+  <text x="74" y="156" fill="#e0f2fe" font-family="Segoe UI, Arial, sans-serif" font-size="34" letter-spacing="10">AFTERNOON ONLY</text>
+  <text x="72" y="856" fill="#eff6ff" font-family="Segoe UI, Arial, sans-serif" font-size="92" font-weight="700">INCEPTION</text>
+  <text x="76" y="908" fill="#dbeafe" font-family="Segoe UI, Arial, sans-serif" font-size="32" letter-spacing="8">DELHI MATINEE · 240.0</text>
+</svg>
