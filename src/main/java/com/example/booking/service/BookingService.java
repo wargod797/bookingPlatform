@@ -1,5 +1,8 @@
 package com.example.booking.service;
 
+import com.example.booking.exception.InvalidBookingRequestException;
+import com.example.booking.exception.ResourceNotFoundException;
+import com.example.booking.exception.SeatUnavailableException;
 import com.example.booking.model.Booking;
 import com.example.booking.model.Seat;
 import com.example.booking.model.Show;
@@ -7,60 +10,106 @@ import com.example.booking.repository.BookingRepository;
 import com.example.booking.repository.SeatRepository;
 import com.example.booking.repository.ShowRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
 
-    @Autowired
-    private ShowRepository showRepo;
+    private final ShowRepository showRepo;
+    private final SeatRepository seatRepo;
+    private final BookingRepository bookingRepo;
+    private final PricingEngine pricingEngine;
 
-    @Autowired
-    private SeatRepository seatRepo;
-
-    @Autowired
-    private BookingRepository bookingRepo;
-
-    @Autowired
-    private PricingEngine pricingEngine;
+    public BookingService(
+            ShowRepository showRepo,
+            SeatRepository seatRepo,
+            BookingRepository bookingRepo,
+            PricingEngine pricingEngine) {
+        this.showRepo = showRepo;
+        this.seatRepo = seatRepo;
+        this.bookingRepo = bookingRepo;
+        this.pricingEngine = pricingEngine;
+    }
 
     public Optional<Booking> getBookingById(Long id) {
         return bookingRepo.findById(id);
     }
 
-    public Booking saveBooking(Booking booking) {
-        return bookingRepo.save(booking);
-    }
-
     @Transactional
     public Booking bookTickets(Long showId, List<String> seatNumbers) {
+        List<String> requestedSeats = normalizeSeatNumbers(seatNumbers);
 
         Show show = showRepo.findById(showId)
-                .orElseThrow(() -> new RuntimeException("Show not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Show not found: " + showId));
 
-        List<Seat> seats = seatRepo.findByShowIdAndSeatNumberIn(showId, seatNumbers);
+        List<Seat> seats = seatRepo.findByShowIdAndSeatNumberIn(showId, requestedSeats);
+        validateSeatSelection(requestedSeats, seats);
 
-        // 🚨 Seat validation
         for (Seat seat : seats) {
             if (seat.isBooked()) {
-                throw new RuntimeException("Seat already booked: " + seat.getSeatNumber());
+                throw new SeatUnavailableException("Seat already booked: " + seat.getSeatNumber());
             }
         }
 
-        // Lock seats
         seats.forEach(seat -> seat.setBooked(true));
-
-        double totalPrice = pricingEngine.calculatePrice(seats, show);
 
         Booking booking = new Booking();
         booking.setShow(show);
-        booking.setSeats(seats);
-        booking.setTotalPrice(totalPrice);
+        booking.setSeats(orderSeatsByRequest(requestedSeats, seats));
+        booking.setTotalPrice(pricingEngine.calculatePrice(seats, show));
+        booking.setCreatedAt(LocalDateTime.now());
 
         return bookingRepo.save(booking);
+    }
+
+    private List<String> normalizeSeatNumbers(List<String> seatNumbers) {
+        if (seatNumbers == null || seatNumbers.isEmpty()) {
+            throw new InvalidBookingRequestException("At least one seat must be selected");
+        }
+
+        List<String> normalizedSeats = seatNumbers.stream()
+                .map(seat -> seat == null ? "" : seat.trim())
+                .filter(seat -> !seat.isEmpty())
+                .collect(Collectors.toList());
+
+        Set<String> uniqueSeats = new LinkedHashSet<>(normalizedSeats);
+        if (normalizedSeats.isEmpty() || uniqueSeats.size() != seatNumbers.size()) {
+            throw new InvalidBookingRequestException("Seat numbers must be unique and non-empty");
+        }
+
+        return new ArrayList<>(uniqueSeats);
+    }
+
+    private void validateSeatSelection(List<String> requestedSeats, List<Seat> seats) {
+        if (seats.size() != requestedSeats.size()) {
+            Set<String> foundSeatNumbers = seats.stream()
+                    .map(Seat::getSeatNumber)
+                    .collect(Collectors.toSet());
+
+            List<String> missingSeats = requestedSeats.stream()
+                    .filter(seat -> !foundSeatNumbers.contains(seat))
+                    .toList();
+
+            throw new InvalidBookingRequestException(
+                    "Unknown seat(s): " + String.join(", ", missingSeats)
+            );
+        }
+    }
+
+    private List<Seat> orderSeatsByRequest(List<String> requestedSeats, List<Seat> seats) {
+        return requestedSeats.stream()
+                .map(seatNumber -> seats.stream()
+                        .filter(seat -> seat.getSeatNumber().equals(seatNumber))
+                        .findFirst()
+                        .orElseThrow())
+                .toList();
     }
 }

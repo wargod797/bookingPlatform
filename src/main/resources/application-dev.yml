@@ -7,9 +7,9 @@ spring:
     hibernate:
       ddl-auto: update
   cache:
-   type: jcache
-   jcache:
-     config: classpath:ehcache.xml
+    type: jcache
+    jcache:
+      config: classpath:ehcache.xml
   # OR
   # type: redis
   # redis:
@@ -17,3 +17,12 @@ spring:
 #  redis:
 #    host: localhost
 #    port: 6379
+
+booking:
+  pricing:
+    third-ticket-offer-cities:
+      - Mumbai
+      - Bengaluru
+    third-ticket-offer-theatres:
+      - PVR Andheri
+      - Forum Mall Screens

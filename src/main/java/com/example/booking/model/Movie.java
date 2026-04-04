@@ -6,6 +6,7 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "movie")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,10 +15,12 @@ public class Movie implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
+    @Column(nullable = false)
     private String title;
 
-    @NonNull
+    @Column(nullable = false)
     private String genre;
-    // getters and setters omitted for brevity
+
+    @Column(nullable = false)
+    private String language;
 }

@@ -73,6 +73,8 @@ The repository layer uses Spring Data JPA for persistence.
 
 Current repositories:
 
+- `CityRepository`
+- `TheatreRepository`
 - `MovieRepository`
 - `ShowRepository`
 - `SeatRepository`
@@ -110,6 +112,7 @@ Key fields:
 - `id`
 - `title`
 - `genre`
+- `language`
 
 ### Show
 Represents a scheduled screening of a movie in a theatre.
@@ -179,6 +182,7 @@ Relationship notes:
 
 Supported operations:
 
+- `GET /movies` with optional genre and language filters
 - `POST /movies` to create a movie
 - `GET /movies/{id}` to fetch a movie by ID
 
@@ -186,6 +190,7 @@ Notes:
 
 - `GET /movies/{id}` is cache-enabled
 - movie creation directly persists the request body as a `Movie` entity
+- movie metadata now includes `language` so the platform can represent localized movie variants
 
 ### Browse APIs
 `/browse`
@@ -197,7 +202,7 @@ Supported operations:
 Notes:
 
 - browse calls filter by movie, city, and show date
-- browse lookup is cache-enabled
+- the selected read scenario is implemented through movie plus city/date show lookup
 
 ### Booking APIs
 `/bookings`
@@ -206,16 +211,20 @@ Supported operations in the code:
 
 - `GET /bookings/{id}` to fetch a booking
 - `POST /bookings` with `BookingRequest`
-- `POST /bookings` with `Booking`
 
-Design concern:
+Booking validations now include:
 
-- there are currently two `POST /bookings` methods mapped to the same route, which will create an ambiguous mapping problem in Spring MVC
+- non-empty and unique seat selection
+- rejection of unknown seat numbers
+- rejection of already booked seats
+- automatic booking timestamp population
 
-Recommended direction:
+### Theatre Partner APIs
+`/partners/theatres`
 
-- keep one public booking endpoint for customer booking requests
-- move raw entity persistence to a distinct internal/admin route if still needed
+Supported operations:
+
+- `POST /partners/theatres` to onboard a theatre for a city
 
 ## Booking Flow
 The booking flow is implemented in `BookingService#bookTickets`.
@@ -262,7 +271,7 @@ Pricing is handled by the dedicated `PricingEngine` component.
 Current rules:
 
 1. base price = seat count multiplied by show price
-2. if 3 or more seats are selected, apply a 50% discount for one ticket
+2. if 3 or more seats are selected and the show matches configured offer cities or theatres, apply a 50% discount for one ticket
 3. if the show runs after 12:00 and before 16:00, apply an additional 20% discount to the total
 
 This design keeps price calculation isolated from controller and repository concerns.
@@ -289,18 +298,15 @@ Configured cache mode:
 
 - `spring.cache.type=jcache`
 - cache config loaded from `ehcache.xml`
+- pricing offer eligibility loaded from `booking.pricing`
 
 Current cache usage:
 
 - `MovieService#getMovieById`
-- `MovieController#getMovie`
-- `BrowseController#getShows`
-- `BookingController#getBooking`
 
 Cache design note:
 
-- only the `movies` cache is explicitly defined in `ehcache.xml`
-- methods using bare `@Cacheable` without a cache name rely on default behavior and should be standardized
+- only movie lookup is currently cached explicitly through the service layer
 
 ## Cache Technology Decision
 The repository includes both Ehcache-oriented runtime configuration and a Redis container in Docker Compose. The active design choice, however, is Ehcache.

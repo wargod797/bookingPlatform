@@ -53,7 +53,7 @@ The main entities are:
 
 - `City`: a supported city
 - `Theatre`: belongs to a city
-- `Movie`: title and genre
+- `Movie`: title, genre, and language
 - `Show`: connects a movie and theatre with date, time, and base price
 - `Seat`: belongs to a show and tracks booking status
 - `Booking`: stores the selected show, seats, total price, and creation time
@@ -71,7 +71,7 @@ Relationship summary:
 `PricingEngine` applies the following pricing logic:
 
 1. Base total = `number of seats x show price`
-2. If 3 or more seats are booked, the 3rd ticket gets a 50% discount
+2. If 3 or more seats are booked and the show is in a configured offer city or theatre, the 3rd ticket gets a 50% discount
 3. If the show time is between 12:00 PM and 4:00 PM, the total gets a 20% discount
 
 ## API Endpoints
@@ -92,8 +92,19 @@ Example request:
 ```json
 {
   "title": "Interstellar",
-  "genre": "Sci-Fi"
+  "genre": "Sci-Fi",
+  "language": "English"
 }
+```
+
+#### List movies
+```http
+GET /movies?genre={genre}&language={language}
+```
+
+Example:
+```http
+GET /movies?genre=Sci-Fi&language=English
 ```
 
 #### Get movie by id
@@ -142,6 +153,21 @@ Example:
 GET /bookings/1
 ```
 
+### Theatre Partner APIs
+#### Onboard theatre
+```http
+POST /partners/theatres
+Content-Type: application/json
+```
+
+Example request:
+```json
+{
+  "theatreName": "PVR Andheri",
+  "cityName": "Mumbai"
+}
+```
+
 ## OpenAPI and Swagger UI
 The project includes `springdoc-openapi-starter-webmvc-ui`, so once the application starts successfully you should be able to access Swagger UI at:
 
@@ -163,6 +189,7 @@ http://localhost:8080/swagger-ui/index.html
 - Hibernate DDL mode: `update`
 - cache type: `jcache`
 - cache config: `classpath:ehcache.xml`
+- third-ticket offer cities and theatres are configurable under `booking.pricing`
 
 Environment variables:
 

@@ -4,7 +4,6 @@ import com.example.booking.model.Booking;
 import com.example.booking.model.BookingRequest;
 import com.example.booking.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,6 @@ public class BookingController implements Serializable {
     @Autowired
     private BookingService bookingService;
 
-    @Cacheable
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBooking(@PathVariable Long id) {
         Optional<Booking> booking = bookingService.getBookingById(id);
@@ -32,10 +30,5 @@ public class BookingController implements Serializable {
                 request.getShowId(),
                 request.getSeats()
         );
-    }
-
-    @PostMapping
-    public Booking addBooking(@RequestBody Booking booking) {
-        return bookingService.saveBooking(booking);
     }
 }
