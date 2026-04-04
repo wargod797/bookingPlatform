@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Platform Domain Exercise Documentation</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 14mm;
+    }
+
+    :root {
+      --ink: #1f2937;
+      --muted: #5b6470;
+      --border: #d7dbe0;
+      --panel: #f7f9fb;
+      --accent: #0f766e;
+      --accent-soft: #e6fffb;
+      --accent-dark: #115e59;
+      --danger-soft: #fff5f5;
+      --warning-soft: #fffbea;
+      --mono: "Cascadia Code", "Consolas", "Courier New", monospace;
+      --sans: "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 12px;
+      line-height: 1.5;
+      background: white;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 8px;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 26px;
+      color: var(--accent-dark);
+    }
+
+    h2 {
+      margin-top: 20px;
+      padding-bottom: 6px;
+      font-size: 18px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    h3 {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--accent-dark);
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
+
+    ul, ol {
+      margin: 6px 0 10px 18px;
+      padding: 0;
+    }
+
+    li {
+      margin: 3px 0;
+    }
+
+    .cover {
+      padding: 10px 0 8px;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0 6px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent-dark);
+    }
+
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 10px 12px;
+      margin: 12px 0;
+    }
+
+    .warning {
+      border-left-color: #d97706;
+      background: var(--warning-soft);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid var(--border);
+      padding: 7px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: #eef3f7;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: #f2f4f7;
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    pre {
+      margin: 8px 0 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fbfcfd;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .diagram {
+      margin: 12px 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      padding: 8px;
+    }
+
+    .diagram svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .pill {
+      display: inline-block;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #edf7f6;
+      color: var(--accent-dark);
+      border: 1px solid #cfe9e6;
+      font-size: 11px;
+    }
+
+    .section-break {
+      page-break-before: always;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <h1>Booking Platform Domain Exercise</h1>
+    <p class="subtitle">Flows, design, and PowerShell-friendly curl commands for the scenarios in Version 1.3.3 of the attached exercise.</p>
+    <div class="summary-grid">
+      <div class="card">
+        <strong>Code Scope Covered</strong>
+        <div>B2B theatre onboarding, show creation, seat allocation, B2C browse, movie creation/filtering, booking, pricing, cache, and scenario-focused tests.</div>
+      </div>
+      <div class="card">
+        <strong>Primary Runtime</strong>
+        <div>Spring Boot 4, Java 21, PostgreSQL, Ehcache via JCache, Docker Compose for local services.</div>
+      </div>
+    </div>
+    <p class="small">Assumption for curl sequences: the local database is clean. If your environment already contains data, use the <code>id</code> values returned by each create API instead of assuming <code>1</code>, <code>2</code>, or <code>3</code>.</p>
+  </section>
+
+  <h2>1. Requirement Mapping</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Exercise Area</th>
+        <th>Requirement</th>
+        <th>Coverage in Current Solution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Read scenario</td>
+        <td>Browse theatres currently running the show in the town by chosen date.</td>
+        <td><code>GET /browse/shows?movieId=&amp;city=&amp;date=</code></td>
+      </tr>
+      <tr>
+        <td>Pricing rule</td>
+        <td>50% discount on the third ticket in selected cities and theatres.</td>
+        <td>Implemented through <code>PricingEngine</code> plus configurable <code>booking.pricing</code> rules.</td>
+      </tr>
+      <tr>
+        <td>Pricing rule</td>
+        <td>20% discount for afternoon shows.</td>
+        <td>Applied for shows from <code>12:00</code> up to but not including <code>16:00</code>.</td>
+      </tr>
+      <tr>
+        <td>Write scenario</td>
+        <td>Book movie tickets by theatre, timing, and preferred seats.</td>
+        <td><code>POST /bookings</code> with seat validation and persisted booking.</td>
+      </tr>
+      <tr>
+        <td>Write scenario</td>
+        <td>Theatres can create shows for the day.</td>
+        <td><code>POST /partners/shows</code></td>
+      </tr>
+      <tr>
+        <td>Write scenario</td>
+        <td>Theatres can allocate seat inventory for the show.</td>
+        <td><code>POST /partners/shows/{showId}/seats</code></td>
+      </tr>
+      <tr>
+        <td>B2B onboarding</td>
+        <td>Theatre partners onboard theatres over the platform.</td>
+        <td><code>POST /partners/theatres</code></td>
+      </tr>
+      <tr>
+        <td>B2C catalog</td>
+        <td>Customers access movies by city, language, and genre.</td>
+        <td>Movie metadata contains <code>language</code>; listing supports <code>genre</code> and <code>language</code> filters.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2. Solution Overview</h2>
+  <p>The platform is split into two operating surfaces:</p>
+  <div>
+    <span class="pill">B2B Theatre Partner APIs</span>
+    <span class="pill">B2C Customer Browse APIs</span>
+    <span class="pill">B2C Customer Booking APIs</span>
+    <span class="pill">Config-Driven Pricing</span>
+    <span class="pill">Read-Heavy Cache</span>
+  </div>
+  <div class="callout">
+    The current implementation is intentionally optimized for the exercise’s most important artifacts: API contract, service implementation, design reasoning, data model, and an end-to-end scenario demonstration without a UI.
+  </div>
+
+  <h2>3. Architecture and Core Flows</h2>
+  <h3>3.1 High-Level Architecture</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/>
+        </marker>
+      </defs>
+      <rect x="360" y="14" width="140" height="42" rx="21" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+      <text x="430" y="41" text-anchor="middle" font-size="16" fill="#1f2937">User / Partner</text>
+
+      <rect x="305" y="86" width="250" height="52" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+      <text x="430" y="118" text-anchor="middle" font-size="16" fill="#115e59">REST Controllers</text>
+
+      <rect x="290" y="168" width="280" height="56" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+      <text x="430" y="200" text-anchor="middle" font-size="16" fill="#1f2937">Services and Pricing Engine</text>
+
+      <rect x="70" y="258" width="250" height="44" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+      <text x="195" y="286" text-anchor="middle" font-size="15" fill="#1f2937">Spring Data Repositories</text>
+
+      <rect x="345" y="258" width="170" height="44" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+      <text x="430" y="286" text-anchor="middle" font-size="15" fill="#1f2937">Ehcache / JCache</text>
+
+      <rect x="540" y="258" width="250" height="44" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+      <text x="665" y="286" text-anchor="middle" font-size="15" fill="#1f2937">PostgreSQL</text>
+
+      <line x1="430" y1="56" x2="430" y2="86" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow)"/>
+      <line x1="430" y1="138" x2="430" y2="168" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow)"/>
+      <line x1="380" y1="224" x2="245" y2="258" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow)"/>
+      <line x1="430" y1="224" x2="430" y2="258" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow)"/>
+      <line x1="480" y1="224" x2="640" y2="258" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow)"/>
+    </svg>
+  </div>
+
+  <h3>3.2 End-to-End Business Flow</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 860 410" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/>
+        </marker>
+      </defs>
+      <rect x="30" y="20" width="230" height="52" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+      <text x="145" y="51" text-anchor="middle" font-size="15">1. Onboard theatre</text>
+
+      <rect x="315" y="20" width="230" height="52" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+      <text x="430" y="51" text-anchor="middle" font-size="15">2. Create movie</text>
+
+      <rect x="600" y="20" width="230" height="52" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+      <text x="715" y="51" text-anchor="middle" font-size="15">3. Create show</text>
+
+      <rect x="600" y="115" width="230" height="52" rx="10" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+      <text x="715" y="146" text-anchor="middle" font-size="15">4. Allocate seats</text>
+
+      <rect x="315" y="210" width="230" height="52" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="430" y="241" text-anchor="middle" font-size="15">5. Browse shows</text>
+
+      <rect x="30" y="305" width="230" height="52" rx="10" fill="#fff7ed" stroke="#d97706" stroke-width="2"/>
+      <text x="145" y="336" text-anchor="middle" font-size="15">6. Book seats</text>
+
+      <rect x="315" y="305" width="230" height="52" rx="10" fill="#fff7ed" stroke="#d97706" stroke-width="2"/>
+      <text x="430" y="336" text-anchor="middle" font-size="15">7. Compute final price</text>
+
+      <rect x="600" y="305" width="230" height="52" rx="10" fill="#fff7ed" stroke="#d97706" stroke-width="2"/>
+      <text x="715" y="336" text-anchor="middle" font-size="15">8. Persist booking</text>
+
+      <line x1="260" y1="46" x2="315" y2="46" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow2)"/>
+      <line x1="545" y1="46" x2="600" y2="46" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow2)"/>
+      <line x1="715" y1="72" x2="715" y2="115" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow2)"/>
+      <line x1="600" y1="167" x2="545" y2="210" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow2)"/>
+      <line x1="315" y1="262" x2="260" y2="305" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow2)"/>
+      <line x1="260" y1="331" x2="315" y2="331" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow2)"/>
+      <line x1="545" y1="331" x2="600" y2="331" stroke="#0f766e" stroke-width="2.5" marker-end="url(#arrow2)"/>
+    </svg>
+  </div>
+
+  <h3>3.3 Booking Service Flow</h3>
+  <ol>
+    <li>Receive <code>showId</code> and requested seat numbers.</li>
+    <li>Load the <code>Show</code> from the repository.</li>
+    <li>Load all requested seats for that show.</li>
+    <li>Validate that all seats exist, are unique, and are not already booked.</li>
+    <li>Mark seats as booked inside a transaction.</li>
+    <li>Compute price using location-based third-ticket logic and afternoon discount logic.</li>
+    <li>Persist the final <code>Booking</code> with timestamp and seat relations.</li>
+  </ol>
+
+  <div class="section-break"></div>
+
+  <h2>4. Data Model and API Surface</h2>
+  <h3>4.1 Core Entities</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Entity</th>
+        <th>Purpose</th>
+        <th>Important Fields</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>City</td>
+        <td>Location grouping for theatres.</td>
+        <td><code>id</code>, <code>name</code></td>
+      </tr>
+      <tr>
+        <td>Theatre</td>
+        <td>Partner-owned venue in a city.</td>
+        <td><code>id</code>, <code>name</code>, <code>city</code></td>
+      </tr>
+      <tr>
+        <td>Movie</td>
+        <td>Catalog metadata exposed to customers.</td>
+        <td><code>id</code>, <code>title</code>, <code>genre</code>, <code>language</code></td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>Movie schedule for a theatre and date/time.</td>
+        <td><code>id</code>, <code>movie</code>, <code>theatre</code>, <code>showDate</code>, <code>showTime</code>, <code>price</code></td>
+      </tr>
+      <tr>
+        <td>Seat</td>
+        <td>Allocatable seat inventory per show.</td>
+        <td><code>id</code>, <code>seatNumber</code>, <code>show</code>, <code>isBooked</code></td>
+      </tr>
+      <tr>
+        <td>Booking</td>
+        <td>Customer reservation with computed total.</td>
+        <td><code>id</code>, <code>show</code>, <code>seats</code>, <code>totalPrice</code>, <code>createdAt</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 Implemented Endpoints</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Path</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>POST</td>
+        <td><code>/partners/theatres</code></td>
+        <td>Onboard theatre partner and city mapping.</td>
+      </tr>
+      <tr>
+        <td>POST</td>
+        <td><code>/partners/shows</code></td>
+        <td>Create a show for a movie and theatre.</td>
+      </tr>
+      <tr>
+        <td>POST</td>
+        <td><code>/partners/shows/{showId}/seats</code></td>
+        <td>Allocate seat inventory for a show.</td>
+      </tr>
+      <tr>
+        <td>POST</td>
+        <td><code>/movies</code></td>
+        <td>Create movie metadata including language.</td>
+      </tr>
+      <tr>
+        <td>GET</td>
+        <td><code>/movies</code></td>
+        <td>Filter movies by genre and language.</td>
+      </tr>
+      <tr>
+        <td>GET</td>
+        <td><code>/browse/shows</code></td>
+        <td>Read scenario: browse shows by movie, city, and date.</td>
+      </tr>
+      <tr>
+        <td>POST</td>
+        <td><code>/bookings</code></td>
+        <td>Write scenario: book selected seats for a show.</td>
+      </tr>
+      <tr>
+        <td>GET</td>
+        <td><code>/bookings/{id}</code></td>
+        <td>Fetch persisted booking details.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. Design Decisions and Non-Functional View</h2>
+  <h3>5.1 Transactional Decisions</h3>
+  <ul>
+    <li><code>BookingService#bookTickets</code> runs in a transaction to keep seat marking and booking persistence consistent.</li>
+    <li><code>TheatreService#onboardTheatre</code> and <code>ShowService</code> seat allocation are transactional to keep parent-child persistence aligned.</li>
+    <li>Validation is performed before final save to reduce partial writes.</li>
+  </ul>
+
+  <h3>5.2 Cache Design</h3>
+  <ul>
+    <li>Ehcache via JCache is used for lightweight in-process read caching.</li>
+    <li>Current code caches movie lookup and keeps Redis as an optional future scale-out path.</li>
+    <li>This choice fits the current single-service deployment model from the exercise implementation.</li>
+  </ul>
+
+  <h3>5.3 Existing Theatre IT Integration</h3>
+  <ul>
+    <li>The partner APIs act as a simple façade for theatre onboarding, show publishing, and seat inventory submission.</li>
+    <li>In an extended design, these APIs can be backed by integration adapters for partner PMS or ERP systems.</li>
+    <li>For higher throughput, partner updates can be accepted synchronously and published to downstream topics asynchronously.</li>
+  </ul>
+
+  <h3>5.4 Scalability and Availability Direction</h3>
+  <ul>
+    <li>Run multiple stateless Spring Boot instances behind a load balancer.</li>
+    <li>Move from local cache to Redis or another distributed cache if horizontal scaling requires shared cache state.</li>
+    <li>Use PostgreSQL high availability, read replicas, and multi-AZ deployment for 99.99% availability goals.</li>
+    <li>Shard or partition by city/country when traffic or catalog volume grows significantly.</li>
+  </ul>
+
+  <h3>5.5 Security and Compliance</h3>
+  <ul>
+    <li>Input validation and exception handling are in place for the current scope, but authentication and authorization should be added for production.</li>
+    <li>Recommended next steps: JWT or OAuth2 for partner/customer identity, rate limiting, audit logs, secrets management, and dependency scanning.</li>
+    <li>Payment integration should isolate PCI-sensitive boundaries to a dedicated payment service and gateway redirect/token model.</li>
+  </ul>
+
+  <h3>5.6 Monitoring and KPIs</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Area</th>
+        <th>Suggested KPI</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Browse performance</td>
+        <td>p95 response time, cache hit ratio</td>
+      </tr>
+      <tr>
+        <td>Booking flow</td>
+        <td>booking success rate, seat contention rate, booking latency</td>
+      </tr>
+      <tr>
+        <td>Partner operations</td>
+        <td>theatre onboarding SLA, show publish success rate</td>
+      </tr>
+      <tr>
+        <td>Business</td>
+        <td>conversion rate, seat occupancy, average booking value, platform fee revenue</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Test Scenarios and Curl Commands</h2>
+  <div class="callout warning">
+    These examples use <code>curl.exe</code> with PowerShell line continuation. If your database already has data, replace <code>movieId</code>, <code>theatreId</code>, <code>showId</code>, and <code>bookingId</code> with the actual values returned by your environment.
+  </div>
+
+  <h3>6.1 Base Setup for an Offer Location</h3>
+  <p>This sequence creates an eligible location for the third-ticket offer: <code>Mumbai</code> + <code>PVR Andheri</code>.</p>
+  <pre># 1. Onboard theatre partner
+curl.exe -X POST "http://localhost:8080/partners/theatres" `
+  -H "Content-Type: application/json" `
+  -d '{"theatreName":"PVR Andheri","cityName":"Mumbai"}'
+
+# 2. Create a movie
+curl.exe -X POST "http://localhost:8080/movies" `
+  -H "Content-Type: application/json" `
+  -d '{"title":"Interstellar","genre":"Sci-Fi","language":"English"}'
+
+# 3. Create an afternoon show in the offer location
+curl.exe -X POST "http://localhost:8080/partners/shows" `
+  -H "Content-Type: application/json" `
+  -d '{"movieId":1,"theatreId":1,"showDate":"2026-04-04","showTime":"13:00","price":100.0}'
+
+# 4. Allocate seat inventory
+curl.exe -X POST "http://localhost:8080/partners/shows/1/seats" `
+  -H "Content-Type: application/json" `
+  -d '{"seatNumbers":["A1","A2","A3","A4","A5"]}'</pre>
+
+  <h3>6.2 Read Scenario: Browse Theatres Running the Show by City and Date</h3>
+  <p>This validates the read scenario from the exercise.</p>
+  <pre>curl.exe "http://localhost:8080/browse/shows?movieId=1&city=Mumbai&date=2026-04-04"</pre>
+  <p>Expected result: a non-empty array with the configured show, theatre details, show date, show time, and price.</p>
+
+  <h3>6.3 Write Scenario: Book Tickets for an Eligible Afternoon Offer Show</h3>
+  <p>This validates both pricing rules together:</p>
+  <ul>
+    <li>third-ticket 50% off because the show is in an eligible city/theatre</li>
+    <li>20% afternoon discount because the show time is <code>13:00</code></li>
+  </ul>
+  <pre>curl.exe -X POST "http://localhost:8080/bookings" `
+  -H "Content-Type: application/json" `
+  -d '{"showId":1,"seats":["A1","A2","A3"]}'</pre>
+  <p>Expected price calculation:</p>
+  <pre>3 x 100 = 300
+third ticket 50% off => 300 - 50 = 250
+afternoon 20% off   => 250 x 0.8 = 200</pre>
+  <p>Expected response field: <code>"totalPrice": 200.0</code></p>
+
+  <h3>6.4 Alternate Pricing Scenario: Afternoon Discount Only</h3>
+  <p>This sequence uses a non-eligible theatre and city so only the afternoon discount should apply.</p>
+  <pre># 1. Onboard non-offer theatre
+curl.exe -X POST "http://localhost:8080/partners/theatres" `
+  -H "Content-Type: application/json" `
+  -d '{"theatreName":"Downtown Screens","cityName":"Delhi"}'
+
+# 2. Create a second afternoon show in a non-offer location
+curl.exe -X POST "http://localhost:8080/partners/shows" `
+  -H "Content-Type: application/json" `
+  -d '{"movieId":1,"theatreId":2,"showDate":"2026-04-04","showTime":"13:00","price":100.0}'
+
+# 3. Allocate seats
+curl.exe -X POST "http://localhost:8080/partners/shows/2/seats" `
+  -H "Content-Type: application/json" `
+  -d '{"seatNumbers":["B1","B2","B3","B4"]}'
+
+# 4. Book three seats
+curl.exe -X POST "http://localhost:8080/bookings" `
+  -H "Content-Type: application/json" `
+  -d '{"showId":2,"seats":["B1","B2","B3"]}'</pre>
+  <p>Expected price calculation:</p>
+  <pre>3 x 100 = 300
+third ticket discount => not applicable
+afternoon 20% off     => 300 x 0.8 = 240</pre>
+  <p>Expected response field: <code>"totalPrice": 240.0</code></p>
+
+  <h3>6.5 Alternate Pricing Scenario: Third-Ticket Discount Only</h3>
+  <p>This sequence uses an eligible city/theatre but an evening show, so only the third-ticket offer applies.</p>
+  <pre># 1. Create an evening show at the offer theatre
+curl.exe -X POST "http://localhost:8080/partners/shows" `
+  -H "Content-Type: application/json" `
+  -d '{"movieId":1,"theatreId":1,"showDate":"2026-04-05","showTime":"18:30","price":100.0}'
+
+# 2. Allocate seats
+curl.exe -X POST "http://localhost:8080/partners/shows/3/seats" `
+  -H "Content-Type: application/json" `
+  -d '{"seatNumbers":["C1","C2","C3","C4"]}'
+
+# 3. Book three seats
+curl.exe -X POST "http://localhost:8080/bookings" `
+  -H "Content-Type: application/json" `
+  -d '{"showId":3,"seats":["C1","C2","C3"]}'</pre>
+  <p>Expected price calculation:</p>
+  <pre>3 x 100 = 300
+third ticket 50% off => 300 - 50 = 250
+afternoon discount   => not applicable</pre>
+  <p>Expected response field: <code>"totalPrice": 250.0</code></p>
+
+  <h3>6.6 Another Movie Scenario</h3>
+  <p>This validates catalog flexibility for a second movie while reusing the same theatre partner.</p>
+  <pre># 1. Create another movie
+curl.exe -X POST "http://localhost:8080/movies" `
+  -H "Content-Type: application/json" `
+  -d '{"title":"Inception","genre":"Thriller","language":"English"}'
+
+# 2. Create an afternoon show
+curl.exe -X POST "http://localhost:8080/partners/shows" `
+  -H "Content-Type: application/json" `
+  -d '{"movieId":2,"theatreId":1,"showDate":"2026-04-06","showTime":"15:00","price":120.0}'
+
+# 3. Allocate seats
+curl.exe -X POST "http://localhost:8080/partners/shows/4/seats" `
+  -H "Content-Type: application/json" `
+  -d '{"seatNumbers":["D1","D2","D3","D4","D5"]}'
+
+# 4. Browse this movie
+curl.exe "http://localhost:8080/browse/shows?movieId=2&city=Mumbai&date=2026-04-06"
+
+# 5. Book three seats
+curl.exe -X POST "http://localhost:8080/bookings" `
+  -H "Content-Type: application/json" `
+  -d '{"showId":4,"seats":["D1","D2","D3"]}'</pre>
+  <p>Expected price calculation:</p>
+  <pre>3 x 120 = 360
+third ticket 50% off => 360 - 60 = 300
+afternoon 20% off    => 300 x 0.8 = 240</pre>
+  <p>Expected response field: <code>"totalPrice": 240.0</code></p>
+
+  <h3>6.7 Fetch a Persisted Booking</h3>
+  <pre>curl.exe "http://localhost:8080/bookings/1"</pre>
+
+  <h2>7. Suggested Discussion Points for the Exercise</h2>
+  <ul>
+    <li><strong>Why this scope:</strong> it directly demonstrates API contract, service logic, data model, design decisions, and curl-verifiable scenarios.</li>
+    <li><strong>Why Ehcache now:</strong> current local single-service deployment benefits from low-latency in-process caching without extra operational complexity.</li>
+    <li><strong>How to extend:</strong> add partner show update/delete, bulk booking/cancellation, payment workflow, and distributed cache if horizontal scale is required.</li>
+    <li><strong>How to productionize:</strong> add authn/authz, idempotency, optimistic locking, observability, CI/CD gates, and stronger test automation.</li>
+  </ul>
+
+  <h2>8. Deliverable Summary</h2>
+  <p>This documentation is designed to support the technical discussion for the attached exercise by showing:</p>
+  <ul>
+    <li>the implemented functional scope</li>
+    <li>the architecture and service flows</li>
+    <li>the key design and non-functional reasoning</li>
+    <li>curl commands to demonstrate the scenarios from the exercise in a running environment</li>
+  </ul>
+</body>
+</html>
