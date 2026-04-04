@@ -40,12 +40,12 @@ src/main/resources
 
 ## Architecture Diagram
 ```mermaid
-flowchart LR
-    U["Client"] --> C["REST Controllers"]
-    C --> S["Services"]
-    S --> R["Spring Data Repositories"]
-    R --> DB["PostgreSQL"]
-    S --> CACHE["Spring Cache / Ehcache"]
+flowchart TD
+    U(("User")) --> C[/REST Controller/]
+    C --> S(["Service Layer"])
+    S --> R[["Repository"]]
+    R --> DB(("PostgreSQL"))
+    S --> CACHE(("Cache: Ehcache or Redis"))
 ```
 
 ## Domain Model
